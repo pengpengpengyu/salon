@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.salon.mapper.TimesConsumeRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ruoyi.salon.domain.entity.TimesConsumeRecord">
+        <id column="times_consume_record_id" property="timesConsumeRecordId" />
+        <result column="member_id" property="memberId" />
+        <result column="item_id" property="itemId" />
+        <result column="item_name" property="itemName" />
+        <result column="consume_times" property="consumeTimes" />
+        <result column="times_original" property="timesOriginal" />
+        <result column="times_after" property="timesAfter" />
+        <result column="consume_date" property="consumeDate" />
+        <result column="operator" property="operator" />
+        <result column="remark" property="remark" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        times_consume_record_id, member_id, item_id, item_name, consume_times, times_original, times_after, consume_date, operator, remark, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+</mapper>
