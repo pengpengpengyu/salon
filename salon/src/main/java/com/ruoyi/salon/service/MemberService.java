@@ -4,6 +4,7 @@ import com.ruoyi.salon.domain.entity.Member;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -17,6 +18,7 @@ public interface MemberService extends IService<Member> {
 
     /**
      * 会员列表查询
+     *
      * @param member 查询参数
      * @return 会员列表
      */
@@ -24,8 +26,25 @@ public interface MemberService extends IService<Member> {
 
     /**
      * 新增会员
-     * @param member
-     * @return
+     *
+     * @param member 会员信息
+     * @return 会员信息
      */
     Member add(Member member);
+
+    /**
+     * 修改会员
+     *
+     * @param member 会员信息
+     * @return 会员信息
+     */
+    Member update(Member member);
+
+    /**
+     * 根据ID列表批量删除
+     *
+     * @param ids id列表
+     * @return true/false
+     */
+    Boolean removeBatch(Set<Long> ids);
 }

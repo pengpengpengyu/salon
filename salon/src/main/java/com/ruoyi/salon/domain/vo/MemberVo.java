@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -79,4 +80,8 @@ public class MemberVo extends BaseVo {
      */
     private String remark;
 
+    /**
+     * 最近消费时间
+     */
+    private LocalDateTime lastCustomTime;
 }

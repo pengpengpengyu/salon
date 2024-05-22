@@ -54,4 +54,9 @@ public class Item extends MbBaseEntity {
     @TableField("description")
     private String description;
 
+    /**
+     * 删除后的项目ID，用于唯一索引
+     */
+    @TableField("del_item_id")
+    private Long delItmeId;
 }

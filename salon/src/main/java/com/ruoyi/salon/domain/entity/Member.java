@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -95,5 +96,17 @@ public class Member extends MbBaseEntity {
      */
     @TableField("remark")
     private String remark;
+
+    /**
+     * 最近消费时间
+     */
+    @TableField("last_custom_time")
+    private LocalDateTime lastCustomTime;
+
+    /**
+     * 删除会员编号(用于唯一索引)
+     */
+    @TableField("del_member_id")
+    private Long delMemberId;
 
 }

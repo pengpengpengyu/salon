@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-	<th:block th:include="include :: header('新增会员')" />
+	<th:block th:include="include :: header('修改会员')" />
 	<th:block th:include="include :: select2-css" />
 </head>
 <body>
     <div class="main-content">
-        <form id="form-memeber-add" class="form-horizontal">
+        <form class="form-horizontal" id="form-member-edit" th:object="${member}">
+            <input name="userId"  type="hidden"  th:field="*{memberId}" />
             <h4 class="form-header h4">基本信息</h4>
             <div class="row">
-            	<div class="col-sm-6">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label class="col-sm-4 control-label is-required">会员姓名：</label>
                         <div class="col-sm-8">
-                            <input name="memberName" placeholder="请输入会员姓名" class="form-control" type="text" maxlength="30" required>
+                            <input name="memberName" th:field="*{memberName}" class="form-control" type="text" maxlength="30" required>
                         </div>
                     </div>
                 </div>
@@ -22,7 +23,7 @@
                         <label class="col-sm-4 control-label">性别：</label>
                         <div class="col-sm-8">
                             <select name="gender" class="form-control m-b" th:with="type=${@dict.getType('sys_user_sex')}">
-                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{gender}"></option>
                             </select>
                         </div>
                     </div>
@@ -34,7 +35,7 @@
                         <label class="col-sm-4 control-label is-required">手机号码：</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input id="mobileNo" name="mobileNo" placeholder="请输入手机号码" class="form-control" type="text" maxlength="20" required>
+                                <input id="mobileNo" name="mobileNo" th:field="*{mobileNo}" class="form-control" type="text" maxlength="20" required>
                                 <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
                             </div>
                         </div>
@@ -45,7 +46,7 @@
                         <label class="col-sm-4 control-label">邮箱：</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input id="email" name="email" class="form-control email" type="text" maxlength="50" placeholder="请输入邮箱">
+                                <input id="email" name="email" th:field="*{email}" class="form-control email" type="text" maxlength="50" placeholder="请输入邮箱">
                                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                             </div>
                         </div>
@@ -57,7 +58,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">积分：</label>
                         <div class="col-sm-8">
-                            <input id="integral" name="integral" value="0" class="form-control" type="number" min="0" >
+                            <input id="integral" name="integral" th:field="*{integral}" value="0" class="form-control" type="number" min="0" readonly>
                         </div>
                     </div>
                 </div>
@@ -66,7 +67,7 @@
                         <label class="col-sm-4 control-label">会员等级：</label>
                         <div class="col-sm-8">
                             <select name="level" class="form-control m-b" th:with="type=${@dict.getType('salon_member_level')}">
-                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{level}"></option>
                             </select>
                         </div>
                     </div>
@@ -77,7 +78,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">介绍人：</label>
                         <div class="col-sm-8">
-                            <input id="introducer" name="introducer" class="form-control" type="text" maxlength="100" >
+                            <input id="introducer" name="introducer" th:field="*{introducer}" class="form-control" type="text" maxlength="100" >
                         </div>
                     </div>
                 </div>
@@ -85,7 +86,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">标签：</label>
                         <div class="col-sm-8">
-                            <input  name="label" class="form-control" type="text" maxlength="50" >
+                            <input  name="label" th:field="*{label}" class="form-control" type="text" maxlength="50" >
                         </div>
                     </div>
                 </div>
@@ -96,14 +97,13 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label">备注：</label>
                         <div class="col-xs-10">
-                            <textarea name="remark" maxlength="120" class="form-control" rows="3"></textarea>
+                            <textarea name="remark" th:field="*{remark}" maxlength="120" class="form-control" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-      
     <div class="row">
         <div class="col-sm-offset-5 col-sm-10">
             <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
@@ -112,16 +112,15 @@
     </div>
 	<th:block th:include="include :: footer" />
 	<th:block th:include="include :: select2-js" />
-	<script>
-	    var prefix = ctx + "salon/member";
-        
+	<script type="text/javascript">
+        var prefix = ctx + "salon/member";
+
         function submitHandler() {
 	        if ($.validate.form()) {
-	        	var data = $("#form-memeber-add").serializeArray();
-	        	$.operate.saveTab(prefix + "/add", data);
+	        	var data = $("#form-member-edit").serializeArray();
+	        	$.operate.saveTab(prefix + "/edit", data);
 	        }
 	    }
-
     </script>
 </body>
 </html>

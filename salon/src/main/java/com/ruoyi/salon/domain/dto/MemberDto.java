@@ -1,11 +1,14 @@
 package com.ruoyi.salon.domain.dto;
 
+import com.ruoyi.common.core.validation.UpdateGroup;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -24,6 +27,7 @@ public class MemberDto extends BaseDto {
     /**
      * 会员id
      */
+    @NotNull(groups = UpdateGroup.class, message = "会员ID不能为空")
     private Long memberId;
 
     /**

@@ -2,21 +2,28 @@ package com.ruoyi.web.controller.salon;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.core.validation.UpdateGroup;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.framework.web.service.DictService;
 import com.ruoyi.salon.domain.dto.MemberDto;
 import com.ruoyi.salon.domain.entity.Member;
+import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberVo;
 import com.ruoyi.salon.service.MemberService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * MemberController
@@ -32,6 +39,8 @@ public class MemberController extends BaseController {
 
     @Resource
     private MemberService memberService;
+    @Resource(name = "dict")
+    private DictService dictService;
     private String prefix = "salon/member";
 
     @GetMapping()
@@ -42,6 +51,13 @@ public class MemberController extends BaseController {
     @GetMapping("/add")
     public String add() {
         return prefix + "/add";
+    }
+
+    @GetMapping("/edit/{memberId}")
+    public String edit(@PathVariable("memberId") String memberId, ModelMap modelMap) {
+        Member member = memberService.getById(memberId);
+        modelMap.put("member", member);
+        return prefix + "/edit";
     }
 
     /**
@@ -55,11 +71,14 @@ public class MemberController extends BaseController {
     public TableDataInfo list(Member member) {
         startPage();
         List<MemberVo> list = BeanUtils.convertList(memberService.list(member), MemberVo.class);
+        Map<String, SysDictData> dictDataMap = dictService.getTypeMap(DictTypeEnum.SALON_MEMBER_LEVEL.getCode());
+        list.forEach(t -> t.setLevel(dictDataMap.getOrDefault(t.getLevel(), new SysDictData()).getDictLabel()));
         return getDataTable(list);
     }
 
     /**
      * 新增会员
+     *
      * @param memberDto 会员信息
      * @return 会员信息
      */
@@ -68,7 +87,34 @@ public class MemberController extends BaseController {
     public AjaxResult addSave(@Validated MemberDto memberDto) {
         Member member = BeanUtils.convertEntity(memberDto, Member.class);
         Member resultMemeber = memberService.add(member);
-        return AjaxResult.success(member);
+        return AjaxResult.success(resultMemeber);
+    }
+
+    /**
+     * 修改会员信息
+     *
+     * @param memberDto 会员信息
+     * @return 会员信息
+     */
+    @PostMapping(value = "/edit")
+    @ResponseBody
+    public AjaxResult editSave(@Validated(value = UpdateGroup.class) MemberDto memberDto) {
+        Member member = BeanUtils.convertEntity(memberDto, Member.class);
+        Member resultMember = memberService.update(member);
+        return AjaxResult.success(resultMember);
+    }
+
+    /**
+     * 根据ID列表批量删除
+     *
+     * @param ids 会员ID 多个ID以英文逗号分割
+     * @return 删除结果
+     */
+    @PostMapping(value = "/remove")
+    @ResponseBody
+    public AjaxResult remove(String ids) {
+        Set<Long> memberIds = Arrays.stream(Convert.toLongArray(ids)).collect(Collectors.toSet());
+        return toAjax(memberService.removeBatch(memberIds));
     }
 
 }
