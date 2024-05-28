@@ -41,7 +41,7 @@ public class MemberController extends BaseController {
     private MemberService memberService;
     @Resource(name = "dict")
     private DictService dictService;
-    private String prefix = "salon/member";
+    private final String prefix = "salon/member";
 
     @GetMapping()
     public String member() {

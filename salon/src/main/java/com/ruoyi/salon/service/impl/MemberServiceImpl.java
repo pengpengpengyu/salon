@@ -67,8 +67,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
                 .eq(Member::getMobileNo, member.getMobileNo())
                 .eq(Member::getMemberName, member.getMemberName())
                 .one();
+        boolean isUpdate = member.getMemberId() != null;
         if (existsMember != null) {
-            throw new ServiceException("该手机号对应的会员已存在!");
+            if (!isUpdate) {
+                throw new ServiceException("该手机号对应的会员已存在!");
+            }
+            if (!existsMember.getMemberId().equals(member.getMemberId())) {
+                throw new ServiceException("该手机号对应的会员已存在!");
+            }
         }
     }
 
