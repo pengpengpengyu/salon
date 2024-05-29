@@ -47,8 +47,15 @@ public class ItemController extends BaseController {
     @GetMapping("/edit/{itemId}")
     public String edit(@PathVariable("itemId") Long itemId, ModelMap modelMap) {
         Item item = itemService.getById(itemId);
-        modelMap.put("item", item);
+        modelMap.put("item", BeanUtils.convertEntity(item, ItemVo.class));
         return prefix + "/edit";
+    }
+
+    @GetMapping("/view/{itemId}")
+    public String view(@PathVariable("itemId") Long itemId, ModelMap modelMap) {
+        Item item = itemService.getById(itemId);
+        modelMap.put("item", BeanUtils.convertEntity(item, ItemVo.class));
+        return prefix + "/view";
     }
 
     /**
@@ -76,6 +83,8 @@ public class ItemController extends BaseController {
     @ResponseBody
     public AjaxResult add(@Validated ItemDto itemDto) {
         Item item = BeanUtils.convertEntity(itemDto, Item.class);
+        item.setCreateBy(getLoginName());
+        item.setUpdateBy(getLoginName());
         Item addItem = itemService.add(item);
         return AjaxResult.success(BeanUtils.convertEntity(addItem, ItemVo.class));
     }
@@ -90,6 +99,7 @@ public class ItemController extends BaseController {
     @ResponseBody
     public AjaxResult editSave(@Validated(value = UpdateGroup.class) ItemDto itemDto) {
         Item item = BeanUtils.convertEntity(itemDto, Item.class);
+        item.setUpdateBy(getLoginName());
         Item addItem = itemService.update(item);
         return AjaxResult.success(BeanUtils.convertEntity(addItem, ItemVo.class));
     }

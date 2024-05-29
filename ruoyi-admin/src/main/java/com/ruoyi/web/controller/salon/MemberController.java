@@ -86,6 +86,8 @@ public class MemberController extends BaseController {
     @ResponseBody
     public AjaxResult addSave(@Validated MemberDto memberDto) {
         Member member = BeanUtils.convertEntity(memberDto, Member.class);
+        member.setCreateBy(getLoginName());
+        member.setUpdateBy(getLoginName());
         Member resultMemeber = memberService.add(member);
         return AjaxResult.success(resultMemeber);
     }
@@ -100,6 +102,7 @@ public class MemberController extends BaseController {
     @ResponseBody
     public AjaxResult editSave(@Validated(value = UpdateGroup.class) MemberDto memberDto) {
         Member member = BeanUtils.convertEntity(memberDto, Member.class);
+        member.setUpdateBy(getLoginName());
         Member resultMember = memberService.update(member);
         return AjaxResult.success(resultMember);
     }
