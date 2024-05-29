@@ -33,6 +33,7 @@
         <mybatis-plus.version>3.5.6</mybatis-plus.version>
         <lombok.version>1.18.20</lombok.version>
         <modelmapper.version>2.4.4</modelmapper.version>
+        <jsr310.version>2.9.7</jsr310.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -242,6 +243,12 @@
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
                 <version>${modelmapper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jsr310.version}</version>
             </dependency>
 
         </dependencies>

@@ -8,6 +8,7 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.validation.UpdateGroup;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.web.service.DictService;
+import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
 import com.ruoyi.salon.domain.dto.MemberDto;
 import com.ruoyi.salon.domain.entity.Member;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
@@ -56,8 +57,22 @@ public class MemberController extends BaseController {
     @GetMapping("/edit/{memberId}")
     public String edit(@PathVariable("memberId") String memberId, ModelMap modelMap) {
         Member member = memberService.getById(memberId);
-        modelMap.put("member", member);
+        modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
         return prefix + "/edit";
+    }
+
+    /**
+     * 余额充值
+     *
+     * @param memberId 会员编号
+     * @param modelMap modelMap
+     * @return 余额充值
+     */
+    @GetMapping("/balanceRecharge/{memberId}")
+    public String balanceRecharge(@PathVariable("memberId") String memberId, ModelMap modelMap) {
+        Member member = memberService.getById(memberId);
+        modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
+        return prefix + "/balance_recharge";
     }
 
     /**

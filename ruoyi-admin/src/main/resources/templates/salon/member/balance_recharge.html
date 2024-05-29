@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('余额充值')" />
+	<th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body>
+    <div class="main-content">
+        <form class="form-horizontal" id="form-balance-recharge" >
+            <input name="userId"  type="hidden"  th:field="${member.memberId}" />
+            <h4 class="form-header h4">会员信息</h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">会员姓名：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="${member.memberName}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">手机号码：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="${member.mobileNo}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4 class="form-header h4">充值信息</h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label is-required">充值金额：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input name="rechargeAmount"  class="form-control" type="number" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label is-required">赠送金额：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input name="giveAmount"  class="form-control" type="number" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">活动名称：</label>
+                        <div class="col-sm-8">
+                            <input name="activityName"  placeholder="活动名称" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">充值时间：</label>
+                        <div class="col-sm-8">
+                            <input id="rechargeTime" name="rechargeTime"  class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">支付方式：</label>
+                        <div class="col-sm-8">
+                            <select name="payMode" class="form-control m-b" th:with="type=${@dict.getType('salon_pay_mode')}">
+                                <option text="请选择" value="">请选择</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">备注：</label>
+                        <div class="col-sm-8">
+                            <textarea name="remark" maxlength="120" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+   <!-- <div class="row">
+        <div class="col-sm-offset-5 col-sm-10">
+            <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
+            <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
+        </div>
+    </div>-->
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: select2-js" />
+    <th:block th:include="include :: datetimepicker-js" />
+	<script type="text/javascript">
+
+        $("#rechargeTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            autoclose: true,
+            minView: 0,
+            minuteStep:3});
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(ctx + "salon/balanceRechargeRecord/balanceRecharge", $('#form-balance-recharge').serialize());
+            }
+	    }
+    </script>
+</body>
+</html>
