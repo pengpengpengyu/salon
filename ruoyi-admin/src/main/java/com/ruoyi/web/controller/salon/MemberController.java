@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.web.service.DictService;
 import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
 import com.ruoyi.salon.domain.dto.MemberDto;
+import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
 import com.ruoyi.salon.domain.entity.Member;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberVo;
@@ -133,6 +134,21 @@ public class MemberController extends BaseController {
     public AjaxResult remove(String ids) {
         Set<Long> memberIds = Arrays.stream(Convert.toLongArray(ids)).collect(Collectors.toSet());
         return toAjax(memberService.removeBatch(memberIds));
+    }
+
+    /**
+     * 余额充值
+     *
+     * @param dto 充值记录
+     * @return 充值记录
+     */
+    @PostMapping("/balanceRecharge")
+    @ResponseBody
+    public AjaxResult balanceRechargeSave(@Validated BalanceRechargeRecordDto dto) {
+        BalanceRechargeRecord record = BeanUtils.convertEntity(dto, BalanceRechargeRecord.class);
+        record.setCreateBy(getLoginName());
+        record.setUpdateBy(getLoginName());
+        return toAjax(memberService.balanceRecharge(record));
     }
 
 }

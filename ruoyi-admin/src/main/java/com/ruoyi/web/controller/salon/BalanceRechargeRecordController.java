@@ -31,19 +31,5 @@ public class BalanceRechargeRecordController extends BaseController {
 
     private final String prefix = "salon/balanceRechargeRecord";
 
-    /**
-     * 余额充值
-     *
-     * @param dto 充值记录
-     * @return 充值记录
-     */
-    @PostMapping("/balanceRecharge")
-    @ResponseBody
-    public AjaxResult balanceRechargeSave(@Validated BalanceRechargeRecordDto dto) {
-        BalanceRechargeRecord record = BeanUtils.convertEntity(dto, BalanceRechargeRecord.class);
-        record.setCreateBy(getLoginName());
-        record.setUpdateBy(getLoginName());
-        BalanceRechargeRecord resultRecord = balanceRechargeRecordService.add(record);
-        return AjaxResult.success(resultRecord);
-    }
+
 }

@@ -2,15 +2,18 @@ package com.ruoyi.salon.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
 import com.ruoyi.salon.domain.entity.Member;
 import com.ruoyi.salon.domain.enums.DelFlagEnum;
 import com.ruoyi.salon.mapper.MemberMapper;
+import com.ruoyi.salon.service.BalanceRechargeRecordService;
 import com.ruoyi.salon.service.MemberService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +29,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements MemberService {
+
+    @Resource
+    private BalanceRechargeRecordService balanceRechargeRecordService;
 
     @Override
     public List<Member> list(Member member) {
@@ -60,6 +66,16 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
                 .collect(Collectors.toList());
         updateBatchById(members);
         return removeByIds(ids);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean balanceRecharge(BalanceRechargeRecord record) {
+        Member member = getById(record.getMemberId());
+        member.setRechargeBalance(member.getRechargeBalance().add(record.getRechargeAmount()));
+        member.setGiveBalance(member.getGiveBalance().add(record.getGiveAmount()));
+        updateById(member);
+       return balanceRechargeRecordService.save(record);
     }
 
     private void checkUnionMember(Member member) {

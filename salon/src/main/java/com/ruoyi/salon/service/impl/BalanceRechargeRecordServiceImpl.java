@@ -22,18 +22,5 @@ import javax.annotation.Resource;
 @Service
 public class BalanceRechargeRecordServiceImpl extends ServiceImpl<BalanceRechargeRecordMapper, BalanceRechargeRecord> implements BalanceRechargeRecordService {
 
-    @Resource
-    private MemberService memberService;
 
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public BalanceRechargeRecord add(BalanceRechargeRecord record) {
-        Member member = memberService.getById(record.getMemberId());
-        member.setRechargeBalance(member.getRechargeBalance().add(record.getRechargeAmount()));
-        member.setGiveBalance(member.getGiveBalance().add(record.getGiveAmount()));
-        memberService.updateById(member);
-        save(record);
-        return record;
-    }
 }

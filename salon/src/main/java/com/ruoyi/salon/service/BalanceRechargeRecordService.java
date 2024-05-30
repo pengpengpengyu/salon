@@ -13,11 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BalanceRechargeRecordService extends IService<BalanceRechargeRecord> {
 
-    /**
-     * 新增
-     *
-     * @param record 余额充值记录
-     * @return 余额充值记录
-     */
-    BalanceRechargeRecord add(BalanceRechargeRecord record);
+
 }
