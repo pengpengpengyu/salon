@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ruoyi.salon.domain.entity.MemberItemRel">
-        <id column="t_member_item_rel_id" property="tMemberItemRelId" />
+        <id column="member_item_rel_id" property="memberItemRelId" />
         <result column="member_id" property="memberId" />
         <result column="item_id" property="itemId" />
         <result column="times" property="times" />
@@ -17,7 +17,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        t_member_item_rel_id, member_id, item_id, times, del_flag, create_by, create_time, update_by, update_time
+        member_item_rel_id, member_id, item_id, times, del_flag, create_by, create_time, update_by, update_time
     </sql>
 
 </mapper>

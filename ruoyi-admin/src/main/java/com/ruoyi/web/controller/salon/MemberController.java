@@ -10,8 +10,10 @@ import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.web.service.DictService;
 import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
 import com.ruoyi.salon.domain.dto.MemberDto;
+import com.ruoyi.salon.domain.dto.TimesRechargeRecordDto;
 import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
 import com.ruoyi.salon.domain.entity.Member;
+import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberVo;
 import com.ruoyi.salon.service.MemberService;
@@ -74,6 +76,20 @@ public class MemberController extends BaseController {
         Member member = memberService.getById(memberId);
         modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
         return prefix + "/balance_recharge";
+    }
+
+    /**
+     * 次数充值
+     *
+     * @param memberId 会员编号
+     * @param modelMap modelMap
+     * @return 次数充值
+     */
+    @GetMapping("/timesRecharge/{memberId}")
+    public String timesRecharge(@PathVariable("memberId") String memberId, ModelMap modelMap) {
+        Member member = memberService.getById(memberId);
+        modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
+        return prefix + "/times_recharge";
     }
 
     /**
@@ -140,7 +156,7 @@ public class MemberController extends BaseController {
      * 余额充值
      *
      * @param dto 充值记录
-     * @return 充值记录
+     * @return true/false
      */
     @PostMapping("/balanceRecharge")
     @ResponseBody
@@ -149,6 +165,19 @@ public class MemberController extends BaseController {
         record.setCreateBy(getLoginName());
         record.setUpdateBy(getLoginName());
         return toAjax(memberService.balanceRecharge(record));
+    }
+
+    /**
+     * 次数充值充值
+     *
+     * @param dto 充值记录
+     * @return true/false
+     */
+    @PostMapping("/timesRecharge")
+    @ResponseBody
+    public AjaxResult timesRechargeSave(@Validated TimesRechargeRecordDto dto) {
+        TimesRechargeRecord record = BeanUtils.convertEntity(dto, TimesRechargeRecord.class);
+        return toAjax(memberService.timesRecharge(record));
     }
 
 }

@@ -15,18 +15,14 @@ create table t_member (
                           label         	varchar(30)     						default ''                 comment '标签',
                           introducer		varchar(60)								default ''				   comment '介绍人',
                           remark			varchar(400)							default ''				   comment '备注',
-                          last_custom_time 	datetime                    			  						   comment '最近消费时间',
-                          del_member_id		bigint(20)								default 0				   comment '删除的member_id,用于唯一索引',
-                          del_flag          char(1)         						default '0'                comment '删除标志（0代表存在 1代表删除）',
+                          del_flag          char(1)         						default '0'                comment '删除标志（0代表存在 null代表删除）',
                           create_by         varchar(64)     						default 'system'           comment '创建者',
                           create_time 	    datetime                    			DEFAULT CURRENT_TIMESTAMP  comment '创建时间',
                           update_by         varchar(64)     						default 'system'           comment '更新者',
                           update_time       timestamp                   			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
-                          primary key (member_id) ,
-                          UNIQUE key uk_member1(member_name,mobile_no,del_member_id)
+                          primary key (member_id),
+                          UNIQUE key uk_member1(member_name,mobile_no)
 ) engine=innodb auto_increment=200 comment = '会员表';
-
-
 
 
 -- ----------------------------
@@ -39,14 +35,13 @@ create table t_item (
                         price         	decimal(10,2)     		    			default 0.00	           comment '价格',
                         discounted_price  decimal(10,2)      						default 0.00               comment '折扣价格',
                         description       varchar(320)         	    			default ''                 comment '描述',
-                        del_item_id		bigint(20)								default 0				   comment '删除的item_id,用于唯一索引',
-                        del_flag          char(1)         						default '0'                comment '删除标志（0代表存在 1代表删除）',
+                        del_flag          char(1)         						default '0'                comment '删除标志（0代表存在 null代表删除）',
                         create_by         varchar(64)     						default 'system'           comment '创建者',
                         create_time 	    datetime                    			DEFAULT CURRENT_TIMESTAMP  comment '创建时间',
                         update_by         varchar(64)     						default 'system'           comment '更新者',
                         update_time       timestamp                   			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
                         primary key (item_id),
-                        UNIQUE key uk_item1(item_name,del_item_id)
+                        UNIQUE key uk_item1(item_name)
 ) engine=innodb auto_increment=200 comment = '项目表';
 
 
@@ -103,7 +98,7 @@ create table t_times_recharge_record (
 -- ----------------------------
 drop table if exists t_member_item_rel;
 create table t_member_item_rel (
-                                   t_member_item_rel_id      		bigint(20)      not null	auto_increment  			comment '会员项目关联id',
+                                   member_item_rel_id      		bigint(20)      not null	auto_increment  			comment '会员项目关联id',
                                    member_id         				bigint(20)		not null                 				comment '会员id',
                                    item_id           				bigint(20)      not null     							comment '项目id',
                                    times         					int(10)   		not null  	           	 				comment '充值次数',
@@ -112,8 +107,8 @@ create table t_member_item_rel (
                                    create_time 	    				datetime        			DEFAULT CURRENT_TIMESTAMP   comment '创建时间',
                                    update_by         				varchar(64)     			default 'system'            comment '更新者',
                                    update_time       				timestamp       			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
-                                   primary key (t_member_item_rel_id),
-                                   UNIQUE index uk_member_item_rel(member_id,item_id,del_flag)
+                                   primary key (member_item_rel_id),
+                                   UNIQUE index uk_member_item_rel(member_id,item_id)
 ) engine=innodb auto_increment=200 comment = '会员项目关联表';
 
 

@@ -25,8 +25,8 @@ public class MemberItemRel extends MbBaseEntity {
     /**
      * 会员项目关联id
      */
-    @TableId(value = "t_member_item_rel_id", type = IdType.AUTO)
-    private Long tMemberItemRelId;
+    @TableId(value = "member_item_rel_id", type = IdType.AUTO)
+    private Long memberItemRelId;
 
     /**
      * 会员id

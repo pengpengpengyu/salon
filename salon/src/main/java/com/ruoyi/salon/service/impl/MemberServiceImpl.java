@@ -2,13 +2,18 @@ package com.ruoyi.salon.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
 import com.ruoyi.salon.domain.entity.Member;
+import com.ruoyi.salon.domain.entity.MemberItemRel;
+import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.domain.enums.DelFlagEnum;
 import com.ruoyi.salon.mapper.MemberMapper;
 import com.ruoyi.salon.service.BalanceRechargeRecordService;
+import com.ruoyi.salon.service.MemberItemRelService;
 import com.ruoyi.salon.service.MemberService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.salon.service.TimesRechargeRecordService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +37,10 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Resource
     private BalanceRechargeRecordService balanceRechargeRecordService;
+    @Resource
+    private TimesRechargeRecordService timesRechargeRecordService;
+    @Resource
+    private MemberItemRelService memberItemRelService;
 
     @Override
     public List<Member> list(Member member) {
@@ -74,8 +83,25 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         Member member = getById(record.getMemberId());
         member.setRechargeBalance(member.getRechargeBalance().add(record.getRechargeAmount()));
         member.setGiveBalance(member.getGiveBalance().add(record.getGiveAmount()));
+        member.setUpdateBy(ShiroUtils.getLoginName());
         updateById(member);
        return balanceRechargeRecordService.save(record);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean timesRecharge(TimesRechargeRecord record) {
+        MemberItemRel memberItemRel = new MemberItemRel();
+        memberItemRel.setMemberId(record.getMemberId());
+        memberItemRel.setItemId(record.getItemId());
+        memberItemRel.setTimes(record.getRechargeTimes());
+        memberItemRelService.addRelOrTimes(memberItemRel);
+
+        BalanceRechargeRecord balanceRechargeRecord = new BalanceRechargeRecord();
+        balanceRechargeRecord.setMemberId(record.getMemberId());
+        balanceRechargeRecord.setRechargeAmount(BigDecimal.ZERO);
+        balanceRechargeRecord.setGiveAmount(record.getGiveAmount());
+        return balanceRecharge(balanceRechargeRecord);
     }
 
     private void checkUnionMember(Member member) {
