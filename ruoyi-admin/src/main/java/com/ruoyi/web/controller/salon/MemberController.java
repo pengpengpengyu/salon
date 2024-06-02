@@ -16,6 +16,7 @@ import com.ruoyi.salon.domain.entity.Member;
 import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberVo;
+import com.ruoyi.salon.service.MemberItemRelService;
 import com.ruoyi.salon.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,6 +46,8 @@ public class MemberController extends BaseController {
     private MemberService memberService;
     @Resource(name = "dict")
     private DictService dictService;
+    @Resource
+    private MemberItemRelService memberItemRelService;
     private final String prefix = "salon/member";
 
     @GetMapping()
@@ -72,7 +75,7 @@ public class MemberController extends BaseController {
      * @return 余额充值
      */
     @GetMapping("/balanceRecharge/{memberId}")
-    public String balanceRecharge(@PathVariable("memberId") String memberId, ModelMap modelMap) {
+    public String balanceRecharge(@PathVariable("memberId") Long memberId, ModelMap modelMap) {
         Member member = memberService.getById(memberId);
         modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
         return prefix + "/balance_recharge";
@@ -86,9 +89,10 @@ public class MemberController extends BaseController {
      * @return 次数充值
      */
     @GetMapping("/timesRecharge/{memberId}")
-    public String timesRecharge(@PathVariable("memberId") String memberId, ModelMap modelMap) {
+    public String timesRecharge(@PathVariable("memberId") Long memberId, ModelMap modelMap) {
         Member member = memberService.getById(memberId);
         modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
+        modelMap.put("memberItemRels", memberItemRelService.queryRelForAllItemByMemberId(memberId));
         return prefix + "/times_recharge";
     }
 
@@ -177,6 +181,8 @@ public class MemberController extends BaseController {
     @ResponseBody
     public AjaxResult timesRechargeSave(@Validated TimesRechargeRecordDto dto) {
         TimesRechargeRecord record = BeanUtils.convertEntity(dto, TimesRechargeRecord.class);
+        record.setCreateBy(getLoginName());
+        record.setUpdateBy(getLoginName());
         return toAjax(memberService.timesRecharge(record));
     }
 

@@ -3,11 +3,21 @@ package com.ruoyi.salon.service.impl;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.salon.domain.entity.Item;
 import com.ruoyi.salon.domain.entity.MemberItemRel;
+import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.mapper.MemberItemRelMapper;
+import com.ruoyi.salon.service.ItemService;
 import com.ruoyi.salon.service.MemberItemRelService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -19,6 +29,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, MemberItemRel> implements MemberItemRelService {
+
+    @Resource
+    private ItemService itemService;
 
     @Override
     public MemberItemRel queryByMemberAndItemId(Long memberId, Long itemId) {
@@ -50,6 +63,35 @@ public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, M
             updateRel.setUpdateBy(ShiroUtils.getLoginName());
             updateById(updateRel);
         }
+    }
+
+    @Override
+    public List<MemberItemRelVo> queryVoListByMemberId(Long memberId) {
+        if (memberId == null) {
+            return Collections.emptyList();
+        }
+        return baseMapper.selectVoListByMemberId(memberId);
+    }
+
+    @Override
+    public List<MemberItemRelVo> queryRelForAllItemByMemberId(Long memberId) {
+        if (memberId == null) {
+            return Collections.emptyList();
+        }
+        List<MemberItemRelVo> memberItemRelVos = baseMapper.selectVoListByMemberId(memberId);
+        Set<Long> itemIds = memberItemRelVos.stream().map(MemberItemRelVo::getItemId).collect(Collectors.toSet());
+        itemService.list().forEach(item -> {
+            if (!itemIds.contains(item.getItemId())) {
+                MemberItemRelVo memberItemRelVo = new MemberItemRelVo();
+                memberItemRelVo.setItemId(item.getItemId());
+                memberItemRelVo.setItemName(item.getItemName());
+                memberItemRelVo.setTimes(0);
+                memberItemRelVo.setPrice(item.getPrice());
+                memberItemRelVo.setDiscountedPrice(item.getDiscountedPrice());
+                memberItemRelVos.add(memberItemRelVo);
+            }
+        });
+        return memberItemRelVos;
     }
 
     private MemberItemRel addRel(MemberItemRel memberItemRel) {

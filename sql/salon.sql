@@ -103,7 +103,7 @@ create table t_times_recharge_record (
 -- ----------------------------
 drop table if exists t_member_item_rel;
 create table t_member_item_rel (
-                                   t_member_item_rel_id      		bigint(20)      not null	auto_increment  			comment '会员项目关联id',
+                                   member_item_rel_id      		bigint(20)      not null	auto_increment  			comment '会员项目关联id',
                                    member_id         				bigint(20)		not null                 				comment '会员id',
                                    item_id           				bigint(20)      not null     							comment '项目id',
                                    times         					int(10)   		not null  	           	 				comment '充值次数',
@@ -112,7 +112,7 @@ create table t_member_item_rel (
                                    create_time 	    				datetime        			DEFAULT CURRENT_TIMESTAMP   comment '创建时间',
                                    update_by         				varchar(64)     			default 'system'            comment '更新者',
                                    update_time       				timestamp       			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
-                                   primary key (t_member_item_rel_id),
+                                   primary key (member_item_rel_id),
                                    UNIQUE index uk_member_item_rel(member_id,item_id,del_flag)
 ) engine=innodb auto_increment=200 comment = '会员项目关联表';
 

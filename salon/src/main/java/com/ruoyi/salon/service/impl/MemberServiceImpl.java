@@ -96,6 +96,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         memberItemRel.setItemId(record.getItemId());
         memberItemRel.setTimes(record.getRechargeTimes());
         memberItemRelService.addRelOrTimes(memberItemRel);
+        timesRechargeRecordService.save(record);
 
         BalanceRechargeRecord balanceRechargeRecord = new BalanceRechargeRecord();
         balanceRechargeRecord.setMemberId(record.getMemberId());

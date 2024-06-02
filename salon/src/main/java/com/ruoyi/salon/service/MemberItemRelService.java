@@ -2,6 +2,9 @@ package com.ruoyi.salon.service;
 
 import com.ruoyi.salon.domain.entity.MemberItemRel;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.salon.domain.vo.MemberItemRelVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -25,7 +28,24 @@ public interface MemberItemRelService extends IService<MemberItemRel> {
 
     /**
      * 新增会员项目关联或次数
+     *
      * @param memberItemRel 会员-项目关联
      */
     void addRelOrTimes(MemberItemRel memberItemRel);
+
+    /**
+     * 根据会员编号查询 会员-项目关联列表
+     *
+     * @param memberId 会员编号
+     * @return 会员-项目关联列表
+     */
+    List<MemberItemRelVo> queryVoListByMemberId(Long memberId);
+
+    /**
+     * 根据会员编号获取所有项目的关联,如果未关联某个项目则次数为0
+     *
+     * @param memberId 会员编号
+     * @return 会员-项目关联列表
+     */
+    List<MemberItemRelVo> queryRelForAllItemByMemberId(Long memberId);
 }

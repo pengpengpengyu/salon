@@ -1,8 +1,11 @@
 package com.ruoyi.salon.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -43,6 +46,7 @@ public class TimesRechargeRecordDto extends BaseDto {
      * 充值次数
      */
     @NotNull(message = "充值次数不能为空")
+    @Min(value = 1, message = "充值次数不能小于1")
     private Integer rechargeTimes;
 
     /**
@@ -65,6 +69,8 @@ public class TimesRechargeRecordDto extends BaseDto {
     /**
      * 充值时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime rechargeTime;
 
     /**
