@@ -1,5 +1,6 @@
 package com.ruoyi.salon.service.impl;
 
+import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.salon.domain.entity.TimesConsumeRecord;
 import com.ruoyi.salon.mapper.TimesConsumeRecordMapper;
 import com.ruoyi.salon.service.TimesConsumeRecordService;
@@ -17,4 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class TimesConsumeRecordServiceImpl extends ServiceImpl<TimesConsumeRecordMapper, TimesConsumeRecord> implements TimesConsumeRecordService {
 
+    @Override
+    public Boolean add(TimesConsumeRecord record) {
+        record.setCreateBy(ShiroUtils.getLoginName());
+        record.setUpdateBy(ShiroUtils.getLoginName());
+        return save(record);
+    }
 }

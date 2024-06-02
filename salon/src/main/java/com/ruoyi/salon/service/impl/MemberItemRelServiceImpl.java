@@ -45,6 +45,15 @@ public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, M
     }
 
     @Override
+    public MemberItemRel queryByMemberAndItemIdWithCheck(Long memberId, Long itemId) {
+        MemberItemRel memberItemRel = queryByMemberAndItemId(memberId, itemId);
+        if (memberItemRel == null) {
+            throw new ServiceException("该会员未充值过该项目");
+        }
+        return memberItemRel;
+    }
+
+    @Override
     public void addRelOrTimes(MemberItemRel rel) {
         if (rel.getMemberId() == null || rel.getItemId() == null || rel.getTimes() == null) {
             throw new ServiceException("会员编号,项目编号,充值次数不能为空");
@@ -92,6 +101,12 @@ public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, M
             }
         });
         return memberItemRelVos;
+    }
+
+    @Override
+    public Boolean updateByRelId(MemberItemRel rel) {
+        rel.setUpdateBy(ShiroUtils.getLoginName());
+        return updateById(rel);
     }
 
     private MemberItemRel addRel(MemberItemRel memberItemRel) {

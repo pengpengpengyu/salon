@@ -46,4 +46,11 @@ public interface ItemService extends IService<Item> {
      * @return true/ false
      */
     boolean remove(Long itemId);
+
+    /**
+     * 根据编号查询（带校验）
+     * @param itemId 项目编号
+     * @return 项目
+     */
+    Item queryByIdWithCheck(Long itemId);
 }

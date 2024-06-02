@@ -8,14 +8,8 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.validation.UpdateGroup;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.web.service.DictService;
-import com.ruoyi.salon.domain.dto.BalanceConsumeRecordDto;
-import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
-import com.ruoyi.salon.domain.dto.MemberDto;
-import com.ruoyi.salon.domain.dto.TimesRechargeRecordDto;
-import com.ruoyi.salon.domain.entity.BalanceConsumeRecord;
-import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
-import com.ruoyi.salon.domain.entity.Member;
-import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
+import com.ruoyi.salon.domain.dto.*;
+import com.ruoyi.salon.domain.entity.*;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberVo;
 import com.ruoyi.salon.service.MemberItemRelService;
@@ -199,6 +193,18 @@ public class MemberController extends BaseController {
     public AjaxResult balanceConsumeSave(@Validated BalanceConsumeRecordDto dto) {
         BalanceConsumeRecord record = BeanUtils.convertEntity(dto, BalanceConsumeRecord.class);
         return toAjax(memberService.balanceConsume(record));
+    }
+
+    /**
+     * 充次消费
+     * @param dto 消费记录
+     * @return true/false
+     */
+    @PostMapping("/timesConsume")
+    @ResponseBody
+    public AjaxResult timesConsume(@Validated TimesConsumeRecordDto dto) {
+        TimesConsumeRecord record = BeanUtils.convertEntity(dto, TimesConsumeRecord.class);
+        return toAjax(memberService.timesConsume(record));
     }
 
 }

@@ -58,6 +58,15 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements It
         return removeById(itemId);
     }
 
+    @Override
+    public Item queryByIdWithCheck(Long itemId) {
+        Item existsItem = getById(itemId);
+        if (existsItem == null) {
+            throw new ServiceException("项目不存在");
+        }
+        return existsItem;
+    }
+
     private void checkItemNotExists(Item item) {
         if (item == null) {
             throw new ServiceException("项目不存在");

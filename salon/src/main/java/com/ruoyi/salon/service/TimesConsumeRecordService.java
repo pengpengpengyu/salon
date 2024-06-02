@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface TimesConsumeRecordService extends IService<TimesConsumeRecord> {
 
+    /**
+     * 新增
+     *
+     * @param record 次数消费记录
+     * @return true/false
+     */
+    Boolean add(TimesConsumeRecord record);
 }

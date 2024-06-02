@@ -43,6 +43,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     private ItemService itemService;
     @Resource
     private BalanceConsumeRecordService balanceConsumeRecordService;
+    @Resource
+    private TimesConsumeRecordService timesConsumeRecordService;
 
     @Override
     public List<Member> list(Member member) {
@@ -107,18 +109,21 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         return balanceRecharge(balanceRechargeRecord);
     }
 
+    public Member queryByIdWithCheck(Long memberId) {
+        Member member = getById(memberId);
+        if (member == null) {
+            throw new ServiceException("会员不存在");
+        }
+        return member;
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean balanceConsume(BalanceConsumeRecord record) {
         // 1.会员表余额减扣并记录最后消费日期
-        Member member = getById(record.getMemberId());
-        if (member == null) {
-            throw new ServiceException("会员不存在");
-        }
-        Item item = itemService.getById(record.getItemId());
-        if (item == null) {
-            throw new ServiceException("项目不存在");
-        }
+        Member member = queryByIdWithCheck(record.getMemberId());
+        Item item = itemService.queryByIdWithCheck(record.getItemId());
+
         record.setBalanceOriginal(member.getRechargeBalance());
         record.setGiveBalanceOriginal(member.getGiveBalance());
 
@@ -133,10 +138,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
             }
             rechargeBalanceAfCustom = BigDecimal.ZERO;
         }
-        LocalDate lastCustomDate = Optional.ofNullable(record.getConsumeDate()).orElse(LocalDate.now());
-        if (member.getLastCustomDate() != null && lastCustomDate.isBefore(member.getLastCustomDate())) {
-            lastCustomDate = null;
-        }
+        LocalDate lastCustomDate = convertLastCustomDate(member.getLastCustomDate(), record.getConsumeDate());
         updateBalance(member.getMemberId(), rechargeBalanceAfCustom, giveBalanceAfCustom, lastCustomDate);
 
         // 2.记录余额消费记录
@@ -144,6 +146,47 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         record.setGiveBalanceAfter(giveBalanceAfCustom);
         record.setItemName(item.getItemName());
         return balanceConsumeRecordService.add(record);
+    }
+
+    @Override
+    public Boolean timesConsume(TimesConsumeRecord record) {
+        // 1.修改会员项目关联表剩余次数
+        Member member = queryByIdWithCheck(record.getMemberId());
+        Item item = itemService.queryByIdWithCheck(record.getItemId());
+        MemberItemRel memberItemRel = memberItemRelService.queryByMemberAndItemIdWithCheck(record.getMemberId(), record.getItemId());
+        record.setTimesOriginal(memberItemRel.getTimes());
+
+        Integer timesAfConsume = memberItemRel.getTimes();
+        timesAfConsume = timesAfConsume - record.getConsumeTimes();
+        if (timesAfConsume < 0) {
+            throw new ServiceException("剩余次数不足");
+        }
+        MemberItemRel updateRel = new MemberItemRel();
+        updateRel.setMemberItemRelId(memberItemRel.getMemberItemRelId());
+        updateRel.setTimes(timesAfConsume);
+        memberItemRelService.updateByRelId(updateRel);
+        // 2.记录次数消费记录
+        record.setItemName(item.getItemName());
+        record.setTimesAfter(timesAfConsume);
+        timesConsumeRecordService.add(record);
+        // 3.修改会员表最后消费日期
+        LocalDate lastCustomDate = convertLastCustomDate(member.getLastCustomDate(), record.getConsumeDate());
+        updateBalance(member.getMemberId(), null, null, lastCustomDate);
+        return true;
+    }
+
+    /**
+     * 获取最后消费日期
+     * @param currentLastCustomDate 当前最后消费日期
+     * @param newLastCustomDate 新带最后消费日期
+     * @return 最后消费日期
+     */
+    private LocalDate convertLastCustomDate(LocalDate currentLastCustomDate, LocalDate newLastCustomDate) {
+        LocalDate lastCustomDate = Optional.ofNullable(newLastCustomDate).orElse(LocalDate.now());
+        if (currentLastCustomDate != null && lastCustomDate.isBefore(currentLastCustomDate)) {
+            return currentLastCustomDate;
+        }
+        return lastCustomDate;
     }
 
     /**
