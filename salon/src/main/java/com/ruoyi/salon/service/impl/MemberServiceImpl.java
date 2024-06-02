@@ -3,24 +3,22 @@ package com.ruoyi.salon.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ShiroUtils;
-import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
-import com.ruoyi.salon.domain.entity.Member;
-import com.ruoyi.salon.domain.entity.MemberItemRel;
-import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
+import com.ruoyi.salon.domain.entity.*;
 import com.ruoyi.salon.domain.enums.DelFlagEnum;
 import com.ruoyi.salon.mapper.MemberMapper;
-import com.ruoyi.salon.service.BalanceRechargeRecordService;
-import com.ruoyi.salon.service.MemberItemRelService;
-import com.ruoyi.salon.service.MemberService;
+import com.ruoyi.salon.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.salon.service.TimesRechargeRecordService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,6 +39,10 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     private TimesRechargeRecordService timesRechargeRecordService;
     @Resource
     private MemberItemRelService memberItemRelService;
+    @Resource
+    private ItemService itemService;
+    @Resource
+    private BalanceConsumeRecordService balanceConsumeRecordService;
 
     @Override
     public List<Member> list(Member member) {
@@ -85,7 +87,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         member.setGiveBalance(member.getGiveBalance().add(record.getGiveAmount()));
         member.setUpdateBy(ShiroUtils.getLoginName());
         updateById(member);
-       return balanceRechargeRecordService.save(record);
+        return balanceRechargeRecordService.save(record);
     }
 
     @Override
@@ -103,6 +105,63 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         balanceRechargeRecord.setRechargeAmount(BigDecimal.ZERO);
         balanceRechargeRecord.setGiveAmount(record.getGiveAmount());
         return balanceRecharge(balanceRechargeRecord);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean balanceConsume(BalanceConsumeRecord record) {
+        // 1.会员表余额减扣并记录最后消费日期
+        Member member = getById(record.getMemberId());
+        if (member == null) {
+            throw new ServiceException("会员不存在");
+        }
+        Item item = itemService.getById(record.getItemId());
+        if (item == null) {
+            throw new ServiceException("项目不存在");
+        }
+        record.setBalanceOriginal(member.getRechargeBalance());
+        record.setGiveBalanceOriginal(member.getGiveBalance());
+
+        BigDecimal rechargeBalanceAfCustom = member.getRechargeBalance();
+        BigDecimal giveBalanceAfCustom = member.getGiveBalance();
+        // 先扣充值余额再扣赠送余额
+        rechargeBalanceAfCustom = rechargeBalanceAfCustom.subtract(record.getConsumeAmount());
+        if (rechargeBalanceAfCustom.compareTo(BigDecimal.ZERO) < 0) {
+            giveBalanceAfCustom = giveBalanceAfCustom.subtract(rechargeBalanceAfCustom.abs());
+            if (giveBalanceAfCustom.compareTo(BigDecimal.ZERO) < 0) {
+                throw new ServiceException("余额不足!");
+            }
+            rechargeBalanceAfCustom = BigDecimal.ZERO;
+        }
+        LocalDate lastCustomDate = Optional.ofNullable(record.getConsumeDate()).orElse(LocalDate.now());
+        if (member.getLastCustomDate() != null && lastCustomDate.isBefore(member.getLastCustomDate())) {
+            lastCustomDate = null;
+        }
+        updateBalance(member.getMemberId(), rechargeBalanceAfCustom, giveBalanceAfCustom, lastCustomDate);
+
+        // 2.记录余额消费记录
+        record.setBalanceAfter(rechargeBalanceAfCustom);
+        record.setGiveBalanceAfter(giveBalanceAfCustom);
+        record.setItemName(item.getItemName());
+        return balanceConsumeRecordService.add(record);
+    }
+
+    /**
+     * 修改余额
+     *
+     * @param memberId        会员编号
+     * @param rechargeBalance 充值余额
+     * @param giveBalance     赠送余额
+     * @param lastCustomDate  最后消费日期
+     */
+    private void updateBalance(Long memberId, BigDecimal rechargeBalance, BigDecimal giveBalance, LocalDate lastCustomDate) {
+        Member member = new Member();
+        member.setMemberId(memberId);
+        member.setRechargeBalance(rechargeBalance);
+        member.setGiveBalance(giveBalance);
+        member.setLastCustomDate(lastCustomDate);
+        member.setUpdateBy(ShiroUtils.getLoginName());
+        updateById(member);
     }
 
     private void checkUnionMember(Member member) {

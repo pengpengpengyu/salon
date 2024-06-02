@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BalanceConsumeRecordService extends IService<BalanceConsumeRecord> {
 
+    /**
+     * 新增
+     * @param balanceConsumeRecord 余额消费记录
+     * @return true/false
+     */
+    Boolean add(BalanceConsumeRecord balanceConsumeRecord);
 }

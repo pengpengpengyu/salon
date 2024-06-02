@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -100,8 +101,8 @@ public class Member extends MbBaseEntity {
     /**
      * 最近消费时间
      */
-    @TableField("last_custom_time")
-    private LocalDateTime lastCustomTime;
+    @TableField("last_custom_date")
+    private LocalDate lastCustomDate;
 
     /**
      * 删除会员编号(用于唯一索引)

@@ -8,9 +8,11 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.validation.UpdateGroup;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.web.service.DictService;
+import com.ruoyi.salon.domain.dto.BalanceConsumeRecordDto;
 import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
 import com.ruoyi.salon.domain.dto.MemberDto;
 import com.ruoyi.salon.domain.dto.TimesRechargeRecordDto;
+import com.ruoyi.salon.domain.entity.BalanceConsumeRecord;
 import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
 import com.ruoyi.salon.domain.entity.Member;
 import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
@@ -184,6 +186,19 @@ public class MemberController extends BaseController {
         record.setCreateBy(getLoginName());
         record.setUpdateBy(getLoginName());
         return toAjax(memberService.timesRecharge(record));
+    }
+
+    /**
+     * 余额消费
+     *
+     * @param dto 消费记录
+     * @return true/false
+     */
+    @PostMapping("/balanceConsume")
+    @ResponseBody
+    public AjaxResult balanceConsumeSave(@Validated BalanceConsumeRecordDto dto) {
+        BalanceConsumeRecord record = BeanUtils.convertEntity(dto, BalanceConsumeRecord.class);
+        return toAjax(memberService.balanceConsume(record));
     }
 
 }

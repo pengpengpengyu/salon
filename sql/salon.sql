@@ -15,7 +15,7 @@ create table t_member (
                           label         	varchar(30)     						default ''                 comment '标签',
                           introducer		varchar(60)								default ''				   comment '介绍人',
                           remark			varchar(400)							default ''				   comment '备注',
-                          last_custom_time 	datetime                    			  						   comment '最近消费时间',
+                          last_custom_date 	date                    			  						       comment '最近消费日期',
                           del_member_id		bigint(20)								default 0				   comment '删除的member_id,用于唯一索引',
                           del_flag          char(1)         						default '0'                comment '删除标志（0代表存在 1代表删除）',
                           create_by         varchar(64)     						default 'system'           comment '创建者',

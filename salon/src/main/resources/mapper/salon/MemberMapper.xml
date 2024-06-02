@@ -16,6 +16,7 @@
         <result column="label" property="label" />
         <result column="introducer" property="introducer" />
         <result column="remark" property="remark" />
+        <result column="last_custom_date" property="lastCustomDate" />
         <result column="del_flag" property="delFlag" />
         <result column="create_by" property="createBy" />
         <result column="create_time" property="createTime" />
@@ -25,7 +26,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        member_id, member_name, email, mobile_no, gender, recharge_balance, give_balance, integral, level, label, introducer, remark, del_flag, create_by, create_time, update_by, update_time
+        member_id, member_name, email, mobile_no, gender, recharge_balance, give_balance, integral, level, label, introducer, remark, last_custom_date,del_flag, create_by, create_time, update_by, update_time
     </sql>
 
 </mapper>

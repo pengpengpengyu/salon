@@ -1,5 +1,6 @@
 package com.ruoyi.salon.service.impl;
 
+import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.salon.domain.entity.BalanceConsumeRecord;
 import com.ruoyi.salon.mapper.BalanceConsumeRecordMapper;
 import com.ruoyi.salon.service.BalanceConsumeRecordService;
@@ -17,4 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class BalanceConsumeRecordServiceImpl extends ServiceImpl<BalanceConsumeRecordMapper, BalanceConsumeRecord> implements BalanceConsumeRecordService {
 
+    @Override
+    public Boolean add(BalanceConsumeRecord balanceConsumeRecord) {
+        balanceConsumeRecord.setCreateBy(ShiroUtils.getLoginName());
+        balanceConsumeRecord.setUpdateBy(ShiroUtils.getLoginName());
+        return save(balanceConsumeRecord);
+    }
 }

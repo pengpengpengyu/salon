@@ -1,5 +1,6 @@
 package com.ruoyi.salon.service;
 
+import com.ruoyi.salon.domain.entity.BalanceConsumeRecord;
 import com.ruoyi.salon.domain.entity.BalanceRechargeRecord;
 import com.ruoyi.salon.domain.entity.Member;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -64,4 +65,11 @@ public interface MemberService extends IService<Member> {
      * @return true/false
       */
     Boolean timesRecharge(TimesRechargeRecord record);
+
+    /**
+     * 余额消费
+     * @param record 消费记录
+     * @return true/false
+     */
+    Boolean balanceConsume(BalanceConsumeRecord record);
 }
