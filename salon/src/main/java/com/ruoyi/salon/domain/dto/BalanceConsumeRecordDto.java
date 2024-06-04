@@ -3,6 +3,7 @@ package com.ruoyi.salon.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -75,6 +76,7 @@ public class BalanceConsumeRecordDto extends BaseDto {
      * 消费日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate consumeDate;
 
     /**

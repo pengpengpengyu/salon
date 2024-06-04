@@ -9,43 +9,7 @@
 <div class="main-content">
     <form class="form-horizontal" id="form-time-recharge">
         <input name="userId" type="hidden" th:field="${member.memberId}"/>
-        <h4 class="form-header h4">会员信息</h4>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">会员姓名：</label>
-                    <div class="col-sm-8">
-                        <p class="form-control-plaintext" th:text="${member.memberName}"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">手机号码：</label>
-                    <div class="col-sm-8">
-                        <p class="form-control-plaintext" th:text="${member.mobileNo}"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">充值余额：</label>
-                    <div class="col-sm-8">
-                        <p class="form-control-plaintext" th:text="${member.rechargeBalance}"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">赠送余额：</label>
-                    <div class="col-sm-8">
-                        <p class="form-control-plaintext" th:text="${member.giveBalance}"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <th:block th:include="~{salon/member/include_member :: memberInfo}" />
         <h4 class="form-header h4">项目信息</h4>
         <div class="row">
             <div class="col-sm-6">
@@ -187,6 +151,7 @@
         format: 'yyyy-mm-dd hh:ii',
         autoclose: true,
         minView: 0,
+        todayBtn: true,
         minuteStep: 3
     });
 

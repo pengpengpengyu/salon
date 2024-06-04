@@ -93,6 +93,20 @@ public class MemberController extends BaseController {
     }
 
     /**
+     * 消费
+     * @param memberId 会员编号
+     * @param modelMap modelMap
+     * @return 消费页面
+     */
+    @GetMapping("/consume/{memberId}")
+    public String consume(@PathVariable("memberId") Long memberId, ModelMap modelMap) {
+        Member member = memberService.getById(memberId);
+        modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
+        modelMap.put("memberItemRels", memberItemRelService.queryRelForAllItemByMemberId(memberId));
+        return prefix + "/consume";
+    }
+
+    /**
      * 会员列表查询
      *
      * @param member 请求参数

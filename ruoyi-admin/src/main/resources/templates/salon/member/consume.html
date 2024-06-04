@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('次数充值')"/>
+    <th:block th:include="include :: select2-css"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+</head>
+<body>
+<div class="main-content">
+    <div class="tabs-container">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">余额消费</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">项目次数消费</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div class="panel-body">
+                    <form class="form-horizontal" id="form-balance-consume">
+                        <input name="userId" type="hidden" th:field="${member.memberId}"/>
+                        <th:block th:include="~{salon/member/include_member :: memberInfo}"/>
+                        <h4 class="form-header h4">项目信息</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label is-required">充值项目：</label>
+                                    <div class="col-sm-8">
+                                        <select name="itemId" id="itemId" onchange="itemSelect()"
+                                                class="form-control m-b" required>
+                                            <option text="请选择" value="">请选择</option>
+                                            <option th:each="relVo : ${memberItemRels}" th:text="${relVo.itemName}"
+                                                    th:value="${relVo.itemId}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">项目价格：</label>
+                                    <div class="col-sm-8">
+                                        <p id="itemPrice" class="form-control-plaintext" text="0"> 请先选择项目！</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">折扣价格：</label>
+                                    <div class="col-sm-8">
+                                        <p id="discountedPrice" class="form-control-plaintext" text="0">
+                                            请先选择项目！</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">剩余次数：</label>
+                                    <div class="col-sm-8">
+                                        <p id="originTimes" class="form-control-plaintext" text="0">请先选择项目！</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="form-header h4">消费信息</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label is-required">消费金额：</label>
+                                    <div class="col-sm-8">
+                                        <input name="consumeAmount" class="form-control" type="number" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">消费日期：</label>
+                                    <div class="col-sm-8">
+                                        <input id="consumeDate" name="consumeDate" class="form-control" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">操作人：</label>
+                                    <div class="col-sm-8">
+                                        <input name="operator" class="form-control" type="text"
+                                               placeholder="谁来服务的">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">介绍人：</label>
+                                    <div class="col-sm-8">
+                                        <input name="introducer" class="form-control" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">进店渠道：</label>
+                                    <div class="col-sm-8">
+                                        <select name="enterStoreChannel" class="form-control m-b"
+                                                th:with="enterStoreChannel=${@dict.getType('salon_enter_store_channel')}">
+                                            <option value="">请选择</option>
+                                            <option th:each="dict : ${enterStoreChannel}" th:text="${dict.dictLabel}"
+                                                    th:value="${dict.dictValue}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">备注：</label>
+                                    <div class="col-sm-8">
+                        <textarea name="remark" maxlength="120" class="form-control" rows="3"
+                                  placeholder="记录点什么吧！"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-sm-offset-5 col-sm-10">
+                            <button type="button" class="btn btn-sm btn-primary" onclick="balanceConsumeSubmit()"><i
+                                    class="fa fa-check"></i>保 存
+                            </button>&nbsp;
+                            <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i
+                                    class="fa fa-reply-all"></i>关 闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+                <div class="panel-body">
+                    <form class="form-horizontal" id="form-times-consume">
+                        <input name="userId" type="hidden" th:field="${member.memberId}"/>
+                        <th:block th:include="~{salon/member/include_member :: memberInfo}"/>
+                        <h4 class="form-header h4">项目信息</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label is-required">充值项目：</label>
+                                    <div class="col-sm-8">
+                                        <select name="itemId" id="times_itemId" onchange="times_itemSelect()"
+                                                class="form-control m-b" required>
+                                            <option text="请选择" value="">请选择</option>
+                                            <option th:each="relVo : ${memberItemRels}" th:text="${relVo.itemName}"
+                                                    th:if="${relVo.times} > 0" th:value="${relVo.itemId}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">项目价格：</label>
+                                    <div class="col-sm-8">
+                                        <p id="times_itemPrice" class="form-control-plaintext" text="0">
+                                            请先选择项目！</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label is-required">折扣价格：</label>
+                                    <div class="col-sm-8">
+                                        <p id="times_discountedPrice" class="form-control-plaintext" text="0">请先选择项目！</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">剩余次数：</label>
+                                    <div class="col-sm-8">
+                                        <p id="times_originTimes" class="form-control-plaintext" text="0">
+                                            请先选择项目！</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="form-header h4">消费信息</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label is-required">消费次数：</label>
+                                    <div class="col-sm-8">
+                                        <input name="consumeTimes" class="form-control" type="number" min="0"  value="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">消费日期：</label>
+                                    <div class="col-sm-8">
+                                        <input id="times_consumeDate" name="consumeDate" class="form-control"
+                                               type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">操作人：</label>
+                                    <div class="col-sm-8">
+                                        <input name="operator" class="form-control" type="text"
+                                               placeholder="谁来服务的">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">备注：</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="remark" maxlength="120" class="form-control" rows="3"
+                                                  placeholder="记录点什么吧！"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-sm-offset-5 col-sm-10">
+                            <button type="button" class="btn btn-sm btn-primary" onclick="timesConsumeSubmit()"><i
+                                    class="fa fa-check"></i>保 存
+                            </button>&nbsp;
+                            <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i
+                                    class="fa fa-reply-all"></i>关 闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<div style="display: none">
+    <input th:each="rel: ${memberItemRels}" type="hidden" th:id="${rel.itemId}" th:times="${rel.times}"
+           th:price="${rel.price}" th:discountedPrice="${rel.discountedPrice}"/>
+</div>
+
+</div>
+
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: select2-js"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script type="text/javascript">
+
+    $("#consumeDate,#times_consumeDate").datetimepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        minView: 'month',
+        todayBtn: true,
+        minuteStep: 1
+    });
+
+    function itemSelect() {
+        let defaultMsg = '请先选择项目!';
+        let itemId = $('#itemId').val();
+        if (itemId == undefined || itemId == '') {
+            $('#originTimes').html(defaultMsg);
+            $('#itemPrice').html(defaultMsg);
+            $('#discountedPrice').html(defaultMsg);
+            return;
+        }
+
+        let itemElement = $('#' + itemId);
+        let originTimes = itemElement.attr("times");
+        $('#originTimes').html(originTimes);
+
+        let price = itemElement.attr("price");
+        $('#itemPrice').html(price);
+
+        let discountedPrice = itemElement.attr("discountedPrice");
+        $('#discountedPrice').html(discountedPrice);
+    }
+
+    function times_itemSelect() {
+        let defaultMsg = '请先选择项目!';
+        let itemId = $('#times_itemId').val();
+        if (itemId == undefined || itemId == '') {
+            $('#times_originTimes').html(defaultMsg);
+            $('#tims_itemPrice').html(defaultMsg);
+            $('#tims_discountedPrice').html(defaultMsg);
+            return;
+        }
+
+        let itemElement = $('#' + itemId);
+        let originTimes = itemElement.attr("times");
+        $('#times_originTimes').html(originTimes);
+
+        let price = itemElement.attr("price");
+        $('#times_itemPrice').html(price);
+
+        let discountedPrice = itemElement.attr("discountedPrice");
+        $('#times_discountedPrice').html(discountedPrice);
+    }
+
+    function balanceConsumeSubmit() {
+        if ($.validate.form('form-balance-consume')) {
+            var data = $("#form-balance-consume").serializeArray();
+            $.operate.saveTab(ctx + "salon/member/balanceConsume/", data);
+        }
+    }
+
+    function timesConsumeSubmit() {
+        if ($.validate.form('form-times-consume')) {
+            var data = $("#form-times-consume").serializeArray();
+            $.operate.saveTab(ctx + "salon/member/timesConsume/", data);
+        }
+    }
+</script>
+</body>
+</html>
