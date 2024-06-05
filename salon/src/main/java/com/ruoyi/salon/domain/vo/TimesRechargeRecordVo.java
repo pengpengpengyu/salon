@@ -1,5 +1,6 @@
 package com.ruoyi.salon.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,9 +32,24 @@ public class TimesRechargeRecordVo extends BaseVo {
     private Long memberId;
 
     /**
+     * 会员名称
+     */
+    private String memberName;
+
+    /**
+     * 手机号码
+     */
+    private String mobileNo;
+
+    /**
      * 项目id
      */
     private Long itemId;
+
+    /**
+     * 项目名称
+     */
+    private String itemName;
 
     /**
      * 充值次数
@@ -58,6 +74,7 @@ public class TimesRechargeRecordVo extends BaseVo {
     /**
      * 充值时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rechargeTime;
 
     /**

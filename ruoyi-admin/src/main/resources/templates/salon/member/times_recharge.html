@@ -69,8 +69,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">支付方式：</label>
                     <div class="col-sm-8">
-                        <select name="payMode" class="form-control m-b"
-                                th:with="type=${@dict.getType('salon_pay_mode')}">
+                        <select name="payMode" class="form-control m-b" th:with="type=${@dict.getType('salon_pay_mode')}">
                             <option text="请选择" value="">请选择</option>
                             <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
                                     th:value="${dict.dictValue}"></option>

@@ -112,7 +112,7 @@ public class BeanUtils extends org.springframework.beans.BeanUtils
     }
 
 
-    private static ModelMapper modelMapper = new ModelMapper();
+    private static final ModelMapper modelMapper = new ModelMapper();
 
     /**
      * Bean类型转换

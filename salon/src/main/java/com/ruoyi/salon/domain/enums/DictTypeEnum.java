@@ -13,7 +13,9 @@ import lombok.Getter;
 @Getter
 public enum DictTypeEnum {
     SEX("sys_user_sex", "性别"),
-    SALON_MEMBER_LEVEL("salon_member_level", "会员等级");
+    SALON_MEMBER_LEVEL("salon_member_level", "会员等级"),
+    SALON_PAY_MODE("salon_pay_mode", "充值方式"),
+    SAON_EN("salon_enter_store_channel", "进店渠道");
 
     final String code;
 

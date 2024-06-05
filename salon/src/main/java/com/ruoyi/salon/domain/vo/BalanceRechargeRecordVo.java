@@ -32,6 +32,16 @@ public class BalanceRechargeRecordVo extends BaseVo {
     private Long memberId;
 
     /**
+     * 会员名称
+     */
+    private String memberName;
+
+    /**
+     * 手机号码
+     */
+    private String mobileNo;
+
+    /**
      * 充值金额
      */
     private BigDecimal rechargeAmount;

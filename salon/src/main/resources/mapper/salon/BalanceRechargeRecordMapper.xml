@@ -24,4 +24,32 @@
         balance_recharge_record_id, member_id, recharge_amount, give_amount, activity_name, recharge_time, pay_mode, remark, del_flag, create_by, create_time, update_by, update_time
     </sql>
 
+    <select id="selectList" resultType="com.ruoyi.salon.domain.vo.BalanceRechargeRecordVo">
+        select t.balance_recharge_record_id,
+               t.member_id,
+               t.recharge_amount,
+               t.give_amount,
+               t.activity_name,
+               t.recharge_time,
+               t.pay_mode,
+               h.member_name,
+               h.mobile_no
+        from t_balance_recharge_record t
+                 left join t_member h on t.member_id = h.member_id and h.del_flag = '0' and t.del_flag = '0'
+        where
+            t.del_flag = '0'
+            and h.del_flag = '0'
+            <if test="memberId != null">
+                and  t.member_id = #{memberId}
+            </if>
+            <if test="memberName != null and memberName != ''">
+                and  h.member_name like concat('%', #{memberName})
+            </if>
+            <if test="mobileNo != null and mobileNo != ''">
+                and  h.mobile_no = #{mobileNo}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and t.recharge_time BETWEEN #{beginTime} and #{endTime}
+            </if>
+        </select>
 </mapper>
