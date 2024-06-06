@@ -64,4 +64,11 @@ public interface MemberItemRelService extends IService<MemberItemRel> {
      * @return true/false
      */
     Boolean updateByRelId(MemberItemRel rel);
+
+    /**
+     * 是否存在itemId对应对数据
+     * @param itemId 项目编号
+     * @return true/false
+     */
+    Boolean existByItemId(Long itemId);
 }

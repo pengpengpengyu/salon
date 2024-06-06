@@ -32,6 +32,16 @@ public class TimesConsumeRecordVo extends BaseVo {
     private Long memberId;
 
     /**
+     * 会员名称
+     */
+    private String memberName;
+
+    /**
+     * 手机号
+     */
+    private String mobileNo;
+
+    /**
      * 项目id
      */
     private Long itemId;
@@ -60,7 +70,6 @@ public class TimesConsumeRecordVo extends BaseVo {
      * 消费日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate consumeDate;
 
     /**

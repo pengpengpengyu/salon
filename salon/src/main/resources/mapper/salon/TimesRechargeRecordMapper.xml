@@ -51,5 +51,6 @@
         <if test="beginTime != null and endTime != null">
             and t.recharge_time BETWEEN #{beginTime} and #{endTime}
         </if>
+        order by t.times_recharge_record_id desc
     </select>
 </mapper>

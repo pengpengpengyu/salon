@@ -1,5 +1,6 @@
 package com.ruoyi.salon.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +30,16 @@ public class BalanceConsumeRecordVo extends BaseVo {
      * 会员id
      */
     private Long memberId;
+
+    /**
+     * 会员名称
+     */
+    private String memberName;
+
+    /**
+     * 手机号码
+     */
+    private String mobileNo;
 
     /**
      * 项目id
@@ -68,6 +79,7 @@ public class BalanceConsumeRecordVo extends BaseVo {
     /**
      * 消费日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private LocalDate consumeDate;
 
     /**

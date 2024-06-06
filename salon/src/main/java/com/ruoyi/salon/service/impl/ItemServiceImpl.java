@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.salon.domain.entity.Item;
 import com.ruoyi.salon.mapper.ItemMapper;
-import com.ruoyi.salon.service.ItemService;
+import com.ruoyi.salon.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -21,6 +22,14 @@ import java.util.List;
  */
 @Service
 public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements ItemService {
+
+    @Resource
+    private MemberItemRelService memberItemRelService;
+    @Resource
+    private BalanceConsumeRecordService balanceConsumeRecordService;
+    @Resource
+    private TimesConsumeRecordService timesConsumeRecordService;
+
 
     @Override
     public List<Item> list(Item item) {
@@ -51,6 +60,12 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements It
     public boolean remove(Long itemId) {
         Item existsItem = getById(itemId);
         checkItemNotExists(existsItem);
+        if (memberItemRelService.existByItemId(itemId)) {
+            throw new ServiceException("该项目已有顾客充值");
+        }
+        if (timesConsumeRecordService.existsByItemId(itemId) || balanceConsumeRecordService.existsByItemId(itemId)) {
+            throw new ServiceException("该项目已有顾客消费");
+        }
         Item item = new Item();
         item.setItemId(itemId);
         item.setDelItmeId(itemId);

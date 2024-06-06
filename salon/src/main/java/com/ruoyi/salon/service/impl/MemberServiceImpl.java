@@ -5,6 +5,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.salon.domain.entity.*;
 import com.ruoyi.salon.domain.enums.DelFlagEnum;
+import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.mapper.MemberMapper;
 import com.ruoyi.salon.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -177,8 +178,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     /**
      * 获取最后消费日期
+     *
      * @param currentLastCustomDate 当前最后消费日期
-     * @param newLastCustomDate 新带最后消费日期
+     * @param newLastCustomDate     新带最后消费日期
      * @return 最后消费日期
      */
     private LocalDate convertLastCustomDate(LocalDate currentLastCustomDate, LocalDate newLastCustomDate) {
@@ -235,13 +237,16 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         }
 
         if (member.getGiveBalance().compareTo(BigDecimal.ZERO) > 0) {
-            throw new ServiceException("赠送余额 " + member.getGiveBalance() + errMsg);
+            throw new ServiceException("赠送余额剩余 " + member.getGiveBalance() + errMsg);
         }
 
         if (member.getIntegral().compareTo(Integer.valueOf(0)) > 0) {
-            throw new ServiceException("积分 " + member.getIntegral() + errMsg);
+            throw new ServiceException("积分剩余 " + member.getIntegral() + errMsg);
         }
-        // TODO 剩余次数校验
+        List<MemberItemRelVo> memberItemRelVos = memberItemRelService.queryRelForAllItemByMemberId(memberId);
+        if (CollectionUtils.isNotEmpty(memberItemRelVos)) {
+            throw new ServiceException("该会员下仍有项目" + errMsg);
+        }
         Member delMember = new Member();
         delMember.setMemberId(memberId);
         delMember.setDelMemberId(memberId);

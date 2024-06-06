@@ -11,6 +11,7 @@ import com.ruoyi.salon.service.ItemService;
 import com.ruoyi.salon.service.MemberItemRelService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, M
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addRelOrTimes(MemberItemRel rel) {
         if (rel.getMemberId() == null || rel.getItemId() == null || rel.getTimes() == null) {
             throw new ServiceException("会员编号,项目编号,充值次数不能为空");
@@ -107,6 +109,11 @@ public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, M
     public Boolean updateByRelId(MemberItemRel rel) {
         rel.setUpdateBy(ShiroUtils.getLoginName());
         return updateById(rel);
+    }
+
+    @Override
+    public Boolean existByItemId(Long itemId) {
+        return lambdaQuery().eq(MemberItemRel::getItemId, itemId).last(" limit 1").one() != null;
     }
 
     private MemberItemRel addRel(MemberItemRel memberItemRel) {

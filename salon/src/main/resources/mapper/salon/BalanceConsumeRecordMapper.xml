@@ -30,4 +30,31 @@
         balance_consume_record_id, member_id, item_id, item_name, consume_amount, balance_original, balance_after, give_balance_original, give_balance_after, consume_date, operator, enter_store_channel, introducer, remark, del_flag, create_by, create_time, update_by, update_time
     </sql>
 
+    <select id="selectList" resultType="com.ruoyi.salon.domain.vo.BalanceConsumeRecordVo">
+        select t.balance_consume_record_id , t.member_id, t.item_id,t.consume_amount,
+               t.balance_original ,t.balance_after ,t.give_balance_original ,t.give_balance_after,
+               t.consume_date ,t.operator,h.member_name, h.mobile_no,if(i.item_name != null and i.item_name != '', i.item_name, t.item_name) as item_name
+        from t_balance_consume_record t
+                 left join t_member h on t.member_id = h.member_id and t.del_flag = '0' and h.del_flag = '0'
+                 left join t_item i on t.item_id = i.item_id and t.del_flag = '0' and i.del_flag = '0'
+        where
+            t.del_flag = '0'
+          and h.del_flag = '0'
+          <if test="memberId != null">
+              and t.member_id = #{memberId}
+          </if>
+          <if test="itemId != null">
+              and t.item_id = #{itemId}
+          </if>
+          <if test="mobileNo != null and mobileNo != ''">
+              and h.mobile_no = #{mobileNo}
+          </if>
+          <if test="memberName != null and memberName != ''">
+              and h.member_name like concat(#{memberName}, '%')
+          </if>
+          <if test="beginTime != null and endTime != null">
+              and t.consume_date  between #{beginTIme} and #{endTime}
+          </if>
+          order by t.balance_consume_record_id desc
+    </select>
 </mapper>

@@ -63,4 +63,5 @@ public class BalanceRechargeRecordServiceImpl extends ServiceImpl<BalanceRecharg
         vo.setPayMode(typeMap.getOrDefault(vo.getPayMode(), new SysDictData()).getDictLabel());
         return vo;
     }
+
 }
