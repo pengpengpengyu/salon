@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('散客消费')" />
+	<th:block th:include="include :: select2-css" />
+	<th:block th:include="include :: datetimepicker-css"/>
+</head>
+<body>
+    <div class="main-content">
+		<th:block th:include="~{/salon/member/include_member::balanceConsume}" />
+    </div>
+
+	<div style="display: none">
+		<input th:each="rel: ${memberItemRels}" type="hidden" th:id="${rel.itemId}" th:times="${rel.times}"
+			   th:price="${rel.price}" th:discountedPrice="${rel.discountedPrice}"/>
+	</div>
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: select2-js" />
+	<th:block th:include="include :: datetimepicker-js"/>
+	<script type="text/javascript">
+		function itemSelect() {
+			console.log("itemselect")
+			let defaultMsg = '请先选择项目!';
+			let itemId = $('#itemId').val();
+			if (itemId == undefined || itemId == '') {
+				$('#originTimes').html(defaultMsg);
+				$('#itemPrice').html(defaultMsg);
+				$('#discountedPrice').html(defaultMsg);
+				return;
+			}
+			let itemElement = $('#' + itemId);
+			let originTimes = itemElement.attr("times");
+			$('#originTimes').html(originTimes);
+
+			let price = itemElement.attr("price");
+			$('#itemPrice').html(price);
+
+			let discountedPrice = itemElement.attr("discountedPrice");
+			$('#discountedPrice').html(discountedPrice);
+		}
+
+
+		function balanceConsumeSubmit() {
+            if ($.validate.form('form-balance-consume')) {
+                var data = $("#form-balance-consume").serializeArray();
+                $.operate.saveTab(ctx + "salon/member/nonMemberConsume/", data);
+            }
+        }
+
+		$("#consumeDate").datetimepicker({
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			minView: 'month',
+			todayBtn: true,
+			minuteStep: 1
+		});
+    </script>
+</body>
+</html>

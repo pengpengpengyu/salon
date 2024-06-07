@@ -76,4 +76,17 @@ public interface MemberService extends IService<Member> {
      * @return true/false
      */
     Boolean timesConsume(TimesConsumeRecord record);
+
+    /**
+     * 散客消费
+     * @param record 消费记录
+     * @return  true/false
+     */
+    Boolean nonMemberConsume(BalanceConsumeRecord record);
+
+    /**
+     * 获取散客会员
+     * @return 散客会员编号
+     */
+    Member getNonMember();
 }

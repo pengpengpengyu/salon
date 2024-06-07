@@ -37,3 +37,127 @@
         </div>
     </div>
 </div>
+
+<div th:fragment="balanceConsume">
+    <form class="form-horizontal" id="form-balance-consume">
+        <input name="userId" type="hidden" th:field="${member.memberId}"/>
+        <th:block th:include="~{salon/member/include_member :: memberInfo}"/>
+        <h4 class="form-header h4">项目信息</h4>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label is-required">充值项目：</label>
+                    <div class="col-sm-8">
+                        <select name="itemId" id="itemId" onchange="itemSelect()"
+                                class="form-control m-b" required>
+                            <option text="请选择" value="">请选择</option>
+                            <option th:each="relVo : ${memberItemRels}" th:text="${relVo.itemName}"
+                                    th:value="${relVo.itemId}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">项目价格：</label>
+                    <div class="col-sm-8">
+                        <p id="itemPrice" class="form-control-plaintext" text="0"> 请先选择项目！</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">折扣价格：</label>
+                    <div class="col-sm-8">
+                        <p id="discountedPrice" class="form-control-plaintext" text="0">
+                            请先选择项目！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">剩余次数：</label>
+                    <div class="col-sm-8">
+                        <p id="originTimes" class="form-control-plaintext" text="0">请先选择项目！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="form-header h4">消费信息</h4>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label is-required">消费金额：</label>
+                    <div class="col-sm-8">
+                        <input name="consumeAmount" class="form-control" type="number" min="0" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">消费日期：</label>
+                    <div class="col-sm-8">
+                        <input id="consumeDate" name="consumeDate" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">操作人：</label>
+                    <div class="col-sm-8">
+                        <input name="operator" class="form-control" type="text"
+                               placeholder="谁来服务的">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">介绍人：</label>
+                    <div class="col-sm-8">
+                        <input name="introducer" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">进店渠道：</label>
+                    <div class="col-sm-8">
+                        <select name="enterStoreChannel" class="form-control m-b"
+                                th:with="enterStoreChannel=${@dict.getType('salon_enter_store_channel')}">
+                            <option value="">请选择</option>
+                            <option th:each="dict : ${enterStoreChannel}" th:text="${dict.dictLabel}"
+                                    th:value="${dict.dictValue}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">备注：</label>
+                    <div class="col-sm-8">
+                        <textarea name="remark" maxlength="120" class="form-control" rows="3"
+                                  placeholder="记录点什么吧！"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-sm-offset-5 col-sm-10">
+            <button type="button" class="btn btn-sm btn-primary" onclick="balanceConsumeSubmit()"><i
+                    class="fa fa-check"></i>保 存
+            </button>&nbsp;
+            <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i
+                    class="fa fa-reply-all"></i>关 闭
+            </button>
+        </div>
+    </div>
+</div>

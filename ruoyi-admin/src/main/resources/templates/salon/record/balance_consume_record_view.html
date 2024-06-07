@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('余额消费详情')" />
+</head>
+<body>
+    <div class="main-content">
+        <form class="form-horizontal" th:object="${record}">
+            <h4 class="form-header h4">会员信息</h4>
+            <div class="row">
+            	<div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">会员编号：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{memberId}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">会员名称：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{memberName}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">手机号码：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{mobileNo}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4 class="form-header h4">项目信息</h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">项目编号：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{itemId}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">项目名称：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{itemName}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4 class="form-header h4">消费信息</h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">消费金额：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{consumeAmount}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">消费前余额：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{balanceOriginal}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">剩余余额：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{balanceAfter}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">消费前赠送余额：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{giveBalanceOriginal}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">剩余赠送余额：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{giveBalanceAfter}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">消费日期：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{#temporals.format(consumeDate, 'yyyy-MM-dd')}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">操作人：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{operator}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">进店渠道：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{@dict.getLabel('salon_enter_store_channel', enterStoreChannel)}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">介绍人：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{introducer}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">备注：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{remark}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+	<th:block th:include="include :: footer" />
+</body>
+</html>

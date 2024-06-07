@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <!--<meta charset="utf-8">-->
-    <th:block th:include="include :: header('充值记录')"/>
+    <th:block th:include="include :: header('余额消费记录')"/>
     <th:block th:include="include :: layout-latest-css"/>
 </head>
 
@@ -25,7 +25,13 @@
                                 手机号码：<input type="text" name="mobileNo"/>
                             </li>
                             <li>
-                                <label>充值日期： </label>
+                                <label>项目：</label><select name="itemId" >
+                                <option value="">所有</option>
+                                <option th:each="item :${items}" th:text="${item.itemName}" th:value="${item.itemId}"></option>
+                            </select>
+                            </li>
+                            <li>
+                                <label>消费日期： </label>
                                 <input type="text" class="time-input" id="startTime" placeholder="开始日期"/>
                                 <span>-</span>
                                 <input type="text" class="time-input" id="endTime" placeholder="结束日期"/>
@@ -53,7 +59,7 @@
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: layout-latest-js"/>
 <script th:inline="javascript">
-    var prefix = ctx + "salon/balanceRechargeRecord/";
+    var prefix = ctx + "salon/balanceConsumeRecord";
     /*var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
     var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
     var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];*/
@@ -61,7 +67,7 @@
     var editFlag = [['']];
     var removeFlag = [['']];
     var viewFlag = [['']];
-    var payModes = [[${@dict.getType('salon_pay_mode')}]];
+    var enterStoreChannels = [[${@dict.getType('salon_enter_store_channel')}]];
 
     $(function () {
         queryRecordList();
@@ -76,12 +82,12 @@
             importTemplateUrl: prefix + "/importTemplate",
             // sortName: "createTime",
             // sortOrder: "desc",
-            modalName: "充值记录",
+            modalName: "余额消费记录",
             queryParams: queryParams,
             columns: [{
                 checkbox: false
             }, {
-                field: 'balanceRechargeRecordId',
+                field: 'balanceConsumeRecordId',
                 title: '记录编号'
             },
                 {
@@ -97,34 +103,42 @@
                     title: '手机号码'
                 },
                 {
-                    field: 'rechargeAmount',
-                    title: '充值金额'
+                    field: 'itemName',
+                    title: '项目名称'
                 },
                 {
-                    field: 'giveAmount',
-                    title: '赠送金额'
+                    field: 'consumeAmount',
+                    title: '消费金额'
                 },
                 {
-                    field: 'payMode',
-                    title: '支付方式',
+                    field: 'balanceAfter',
+                    title: '剩余充值余额'
+                },
+                {
+                    field: 'giveBalanceAfter',
+                    title: '剩余赠送金额'
+                },
+                {
+                    field: 'enterStoreChannel',
+                    title: '进店渠道',
                     formatter: function (value, row, index) {
-                        return $.table.selectDictLabel(payModes, value);
+                        return $.table.selectDictLabel(enterStoreChannels, value);
                     }
                 },
                 {
-                    field: 'activityName',
-                    title: '活动名称'
+                    field: 'consumeDate',
+                    title: '消费日期'
                 },
                 {
-                    field: 'rechargeTime',
-                    title: '充值时间'
+                    field: 'operator',
+                    title: '操作人'
                 },
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + viewFlag + '" href="javascript:void(0)" onclick="$.operate.view(\'' + row.balanceRechargeRecordId + '\')"><i class="fa fa-search"></i>详情</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + viewFlag + '" href="javascript:void(0)" onclick="$.operate.view(\'' + row.balanceConsumeRecordId + '\')"><i class="fa fa-search"></i>详情</a> ');
                         //  var more = [];
                         // more.push("<a class='btn btn-success btn-xs " + editFlag + "' href='javascript:void(0)' onclick='$.operate.editTab(" + row.memberId + ")'><i class='fa fa-edit'></i>编辑</a> ");
                         //  more.push("<a class='btn btn-danger btn-xs " + removeFlag + "' href='javascript:void(0)' onclick='$.operate.remove(" + row.memberId + ")'><i class='fa fa-remove'></i>删除</a> ");

@@ -41,7 +41,7 @@
                 <a class="btn btn-success" onclick="$.operate.addTab()">
                     <i class="fa fa-plus"></i> 新增会员
                 </a>
-                <a class="btn btn-primary ">
+                <a class="btn btn-primary" onclick="nonMemberConsume()">
                     <i class="fa fa-edit"></i> 散客消费
                 </a>
                 <a class="btn btn-warning ">
@@ -192,6 +192,14 @@
     function consume(memberId) {
         var url = prefix + '/consume/' + memberId;
         $.modal.openTab("会员消费", url);
+    }
+
+    /**
+     * 散客消费
+     */
+    function nonMemberConsume() {
+        var url = prefix + '/nonMemberConsume';
+        $.modal.openTab('散客消费', url);
     }
 </script>
 </body>

@@ -63,6 +63,13 @@ public class MemberController extends BaseController {
         return prefix + "/edit";
     }
 
+    @GetMapping("/nonMemberConsume")
+    public String nonMemberConsume(ModelMap modelMap) {
+        modelMap.put("member", BeanUtils.convertEntity(memberService.getNonMember(), MemberVo.class));
+        modelMap.put("memberItemRels", memberItemRelService.queryRelForAllItemByMemberId(memberService.getNonMember().getMemberId()));
+        return prefix + "/non_member_consume";
+    }
+
     /**
      * 余额充值
      *
@@ -219,6 +226,18 @@ public class MemberController extends BaseController {
     public AjaxResult timesConsume(@Validated TimesConsumeRecordDto dto) {
         TimesConsumeRecord record = BeanUtils.convertEntity(dto, TimesConsumeRecord.class);
         return toAjax(memberService.timesConsume(record));
+    }
+
+    /**
+     * 散客消费
+     * @param dto 消费记录
+     * @return true/false
+     */
+    @PostMapping("/nonMemberConsume")
+    @ResponseBody
+    public AjaxResult nonMemberConsume(@Validated BalanceConsumeRecordDto dto) {
+        BalanceConsumeRecord record = BeanUtils.convertEntity(dto, BalanceConsumeRecord.class);
+        return toAjax(memberService.nonMemberConsume(record));
     }
 
 }

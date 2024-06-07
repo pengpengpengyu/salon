@@ -171,3 +171,6 @@ create table t_times_consume_record (
                                         index idx_times_consume_record1(member_id,item_id)
 ) engine=innodb auto_increment=200 comment = '次数消费记录表';
 
+-- 散客会员初始化
+insert into t_member (member_id, member_name)
+values (-1, '散客');

@@ -53,7 +53,7 @@
               and h.member_name like concat(#{memberName}, '%')
           </if>
           <if test="beginTime != null and endTime != null">
-              and t.consume_date  between #{beginTIme} and #{endTime}
+              and t.consume_date  between #{beginTime} and #{endTime}
           </if>
           order by t.balance_consume_record_id desc
     </select>

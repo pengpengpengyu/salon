@@ -150,6 +150,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean timesConsume(TimesConsumeRecord record) {
         // 1.修改会员项目关联表剩余次数
         Member member = queryByIdWithCheck(record.getMemberId());
@@ -174,6 +175,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         LocalDate lastCustomDate = convertLastCustomDate(member.getLastCustomDate(), record.getConsumeDate());
         updateBalance(member.getMemberId(), null, null, lastCustomDate);
         return true;
+    }
+
+    @Override
+    public Boolean nonMemberConsume(BalanceConsumeRecord record) {
+        Item item = itemService.queryByIdWithCheck(record.getItemId());
+        record.setItemName(item.getItemName());
+        record.setMemberId(getNonMember().getMemberId());
+        return balanceConsumeRecordService.add(record);
     }
 
     /**
@@ -251,5 +260,13 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         delMember.setMemberId(memberId);
         delMember.setDelMemberId(memberId);
         return delMember;
+    }
+
+    @Override
+    public Member getNonMember() {
+        Member member = new Member();
+        member.setMemberId(-1L);
+        member.setMemberName("散客");
+        return member;
     }
 }
