@@ -46,4 +46,10 @@ public class MemberItemRel extends MbBaseEntity {
     @TableField("times")
     private Integer times;
 
+    /**
+     * 赠送次数
+     */
+    @TableField("give_times")
+    private Integer giveTimes;
+
 }

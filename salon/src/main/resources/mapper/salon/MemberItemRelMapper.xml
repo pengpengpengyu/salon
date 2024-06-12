@@ -13,15 +13,16 @@
         <result column="create_time" property="createTime" />
         <result column="update_by" property="updateBy" />
         <result column="update_time" property="updateTime" />
+        <result column="give_times" property="giveTimes" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        member_item_rel_id, member_id, item_id, times, del_flag, create_by, create_time, update_by, update_time
+        member_item_rel_id, member_id, item_id, times, give_times, del_flag, create_by, create_time, update_by, update_time
     </sql>
 
     <select id="selectVoListByMemberId" resultType="com.ruoyi.salon.domain.vo.MemberItemRelVo" parameterType="java.lang.Long">
-        select t.member_item_rel_id,t.member_id ,t.times,t.item_id ,h.member_name ,i.item_name,
+        select t.member_item_rel_id,t.member_id ,t.times, t.give_times, t.item_id ,h.member_name ,i.item_name,
                i.price, i.discounted_price
         from t_member_item_rel t
         left join t_member h on t.member_id = h.member_id and h.del_flag = '0'

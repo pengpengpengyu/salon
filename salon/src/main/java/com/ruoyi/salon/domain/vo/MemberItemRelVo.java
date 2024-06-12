@@ -40,6 +40,11 @@ public class MemberItemRelVo extends BaseVo {
     private Integer times;
 
     /**
+     * 赠送次数
+     */
+    private Integer giveTimes;
+
+    /**
      * 会员名称
      */
     private String memberName;

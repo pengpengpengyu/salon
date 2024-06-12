@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 public class Generator {
 
     public static void main(String[] args) {
-        String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/ruoyi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8";
+        String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/salon?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8";
         // 使用 FastAutoGenerator 快速配置代码生成器
-        FastAutoGenerator.create(jdbcUrl, "pywang", "123456")
+        FastAutoGenerator.create(jdbcUrl, "salon", "123456")
                 .globalConfig(builder -> {
                     builder.author("pywang") // 设置作者
                             .outputDir("src/main/java") // 输出目录
@@ -27,7 +27,7 @@ public class Generator {
                             .enableBaseColumnList()
                             .enableBaseResultMap();
                     builder.addTablePrefix("t_")
-                            .addInclude("t_member", "t_item", "t_balance_recharge_record", "t_times_recharge_record", "t_member_item_rel", "t_balance_consume_record", "t_times_consume_record") // 设置需要生成的表名
+                            .addInclude("t_rchg_give_item_record") // 设置需要生成的表名
                             .entityBuilder()
                             .logicDeleteColumnName("del_flag")
                             .enableLombok() // 启用 Lombok

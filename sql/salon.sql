@@ -37,12 +37,12 @@ create table t_item (
                         item_id           bigint(20)      			not null	auto_increment    		   comment '项目id',
                         item_name         varchar(200)				not null                			   comment '项目名称',
                         price         	decimal(10,2)     		    			default 0.00	           comment '价格',
-                        discounted_price  decimal(10,2)      						default 0.00               comment '折扣价格',
+                        discounted_price  decimal(10,2)      						default 0.00           comment '折扣价格',
                         description       varchar(320)         	    			default ''                 comment '描述',
                         del_item_id		bigint(20)								default 0				   comment '删除的item_id,用于唯一索引',
                         del_flag          char(1)         						default '0'                comment '删除标志（0代表存在 1代表删除）',
                         create_by         varchar(64)     						default 'system'           comment '创建者',
-                        create_time 	    datetime                    			DEFAULT CURRENT_TIMESTAMP  comment '创建时间',
+                        create_time 	    datetime                    		DEFAULT CURRENT_TIMESTAMP  comment '创建时间',
                         update_by         varchar(64)     						default 'system'           comment '更新者',
                         update_time       timestamp                   			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
                         primary key (item_id),
@@ -58,7 +58,7 @@ create table t_balance_recharge_record (
                                            balance_recharge_record_id      	bigint(20)      not null	auto_increment  			comment '余额充值记录id',
                                            member_id         				bigint(20)		not null                 				comment '会员id',
                                            recharge_amount         			decimal(10,2)   not null  	           	 				comment '充值金额',
-                                           give_amount  						decimal(10,2)   			default 0.00             	comment '赠送金额',
+                                           give_amount  						decimal(10,2)   		default 0.00                comment '赠送金额',
                                            activity_name     				varchar(130)    			default ''               	comment '活动名称',
                                            recharge_time     				datetime        			default CURRENT_TIMESTAMP   comment '充值时间',
                                            pay_mode							char(1)						default '1'					comment '支付方式 1微信 2支付宝 3现金 9其他',
@@ -78,35 +78,56 @@ create table t_balance_recharge_record (
 -- ----------------------------
 drop table if exists t_times_recharge_record;
 create table t_times_recharge_record (
-                                         times_recharge_record_id      	bigint(20)      not null	auto_increment  			comment '次数充值记录id',
-                                         member_id         				bigint(20)		not null                 				comment '会员id',
-                                         item_id           				bigint(20)      not null     							comment '项目id',
-                                         recharge_times         			int(10)   		not null  	           	 				comment '充值次数',
-                                         recharge_amount         			decimal(10,2)   not null  	           	 				comment '充值金额',
-                                         give_amount  						decimal(10,2)   			default 0.00             	comment '赠送金额',
-                                         activity_name     				varchar(130)    			default ''               	comment '活动名称',
-                                         recharge_time     				datetime        			default CURRENT_TIMESTAMP   comment '充值时间',
-                                         pay_mode							char(1)						default '1'					comment '支付方式 1微信 2支付宝 3现金 9其他',
-                                         remark							varchar(400)				default ''				    comment '备注',
-                                         del_flag          				char(1)         			default '0'                 comment '删除标志（0代表存在 null代表删除）',
-                                         create_by         				varchar(64)     			default 'system'            comment '创建者',
-                                         create_time 	    				datetime        			DEFAULT CURRENT_TIMESTAMP   comment '创建时间',
-                                         update_by         				varchar(64)     			default 'system'            comment '更新者',
+                                         times_recharge_record_id      	bigint(20)      not null	auto_increment  			    comment '次数充值记录id',
+                                         member_id         				bigint(20)		not null                 				    comment '会员id',
+                                         item_id           				bigint(20)      not null     							    comment '项目id',
+                                         recharge_times         		int(10)   		not null  	           	 				    comment '充值次数',
+                                         recharge_amount         		decimal(10,2)   not null  	           	 				    comment '充值金额',
+                                         give_amount  					decimal(10,2)   			default 0.00             	    comment '赠送金额',
+                                         activity_name     				varchar(130)    			default ''               	    comment '活动名称',
+                                         recharge_time     				datetime        			default CURRENT_TIMESTAMP       comment '充值时间',
+                                         pay_mode						char(1)						default '1'					    comment '支付方式 1微信 2支付宝 3现金 9其他',
+                                         remark							varchar(400)				default ''				        comment '备注',
+                                         del_flag          				char(1)         			default '0'                     comment '删除标志（0代表存在 null代表删除）',
+                                         create_by         				varchar(64)     			default 'system'                comment '创建者',
+                                         create_time 	    			datetime        			DEFAULT CURRENT_TIMESTAMP       comment '创建时间',
+                                         update_by         				varchar(64)     			default 'system'                comment '更新者',
                                          update_time       				timestamp       			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
                                          primary key (times_recharge_record_id),
                                          index idx_times_recharge_record1(member_id,item_id)
 ) engine=innodb auto_increment=200 comment = '次数充值记录表';
 
+-- ----------------------------
+-- 充值赠送项目记录表
+-- ----------------------------
+drop table if exists t_rchg_give_item_record;
+create table t_rchg_give_item_record (
+                                         rchg_give_item_record_id   	bigint(20)  	not null	auto_increment  			    comment '充值赠送项目记录id',
+                                         recharge_record_id      		bigint(20)      not null	  			    				comment '充值记录id',
+                                         member_id         				bigint(20)		not null                 				    comment '会员id',
+                                         item_id           				bigint(20)      not null     							    comment '项目id',
+                                         give_times         			int(10)   		not null  	           	 				    comment '赠送次数',
+                                         recharge_type					char(1)			not null									comment '充值类型',
+                                         del_flag          				char(1)         			default '0'                     comment '删除标志（0代表存在 null代表删除）',
+                                         create_by         				varchar(64)     			default 'system'                comment '创建者',
+                                         create_time 	    			datetime        			DEFAULT CURRENT_TIMESTAMP       comment '创建时间',
+                                         update_by         				varchar(64)     			default 'system'                comment '更新者',
+                                         update_time       				timestamp       			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
+                                         primary key (rchg_give_item_record_id),
+                                         index idx_chg_give_item_record1(recharge_record_id,recharge_type),
+                                         index idx_chg_give_item_record2(member_id, item_id)
+) engine=innodb auto_increment=200 comment = '充值赠送项目记录表';
 
 -- ----------------------------
 -- 会员项目关联表
 -- ----------------------------
 drop table if exists t_member_item_rel;
 create table t_member_item_rel (
-                                   member_item_rel_id      		bigint(20)      not null	auto_increment  			comment '会员项目关联id',
+                                   member_item_rel_id      		bigint(20)      not null	auto_increment  			    comment '会员项目关联id',
                                    member_id         				bigint(20)		not null                 				comment '会员id',
                                    item_id           				bigint(20)      not null     							comment '项目id',
                                    times         					int(10)   		not null  	           	 				comment '充值次数',
+                                   give_times                       int(10)         not null    default 0                   comment '赠送次数',
                                    del_flag          				char(1)         			default '0'                 comment '删除标志（0代表存在 null代表删除）',
                                    create_by         				varchar(64)     			default 'system'            comment '创建者',
                                    create_time 	    				datetime        			DEFAULT CURRENT_TIMESTAMP   comment '创建时间',
@@ -153,20 +174,20 @@ create table t_balance_consume_record (
 drop table if exists t_times_consume_record;
 create table t_times_consume_record (
                                         times_consume_record_id      		bigint(20)      not null	auto_increment  			comment '次数消费记录id',
-                                        member_id         				bigint(20)		not null 			        			comment '会员id',
-                                        item_id           				bigint(20)      not null     							comment '项目id',
-                                        item_name         				varchar(200)	not null                    			comment '项目名称',
-                                        consume_times         			int(2)   		not null	default 1	    			comment '消费次数',
+                                        member_id         				    bigint(20)		not null 			        			comment '会员id',
+                                        item_id           				    bigint(20)      not null     							comment '项目id',
+                                        item_name         				    varchar(200)	not null                    			comment '项目名称',
+                                        consume_times         			    int(2)   		not null	default 1	    			comment '消费次数',
                                         times_original  					int(2)   								    			comment '原始次数',
                                         times_after  						int(2)   					             				comment '剩余次数',
                                         consume_date     					date        				default (CURRENT_DATE)    	comment '消费日期',
                                         operator							varchar(60)					default ''					comment '操作人',
-                                        remark							varchar(400)				default ''				    comment '备注',
-                                        del_flag          				char(1)         			default '0'                 comment '删除标志（0代表存在 null代表删除）',
-                                        create_by         				varchar(64)     			default 'system'            comment '创建者',
+                                        remark							    varchar(400)				default ''				    comment '备注',
+                                        del_flag          				    char(1)         			default '0'                 comment '删除标志（0代表存在 null代表删除）',
+                                        create_by         				    varchar(64)     			default 'system'            comment '创建者',
                                         create_time 	    				datetime        			DEFAULT CURRENT_TIMESTAMP   comment '创建时间',
-                                        update_by         				varchar(64)     			default 'system'            comment '更新者',
-                                        update_time       				timestamp       			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
+                                        update_by         				    varchar(64)     			default 'system'            comment '更新者',
+                                        update_time       				    timestamp       			default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间',
                                         primary key (times_consume_record_id),
                                         index idx_times_consume_record1(member_id,item_id)
 ) engine=innodb auto_increment=200 comment = '次数消费记录表';
