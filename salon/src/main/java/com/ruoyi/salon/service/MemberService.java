@@ -1,5 +1,7 @@
 package com.ruoyi.salon.service;
 
+import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
+import com.ruoyi.salon.domain.dto.TimesRechargeRecordDto;
 import com.ruoyi.salon.domain.entity.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -54,14 +56,14 @@ public interface MemberService extends IService<Member> {
      * @param record 余额充值记录
      * @return true/false
      */
-    Boolean balanceRecharge(BalanceRechargeRecord record);
+    Boolean balanceRecharge(BalanceRechargeRecordDto record);
 
     /**
      * 次数充值
      * @param record 次数充值记录
      * @return true/false
       */
-    Boolean timesRecharge(TimesRechargeRecord record);
+    Boolean timesRecharge(TimesRechargeRecordDto record);
 
     /**
      * 余额消费
@@ -89,4 +91,11 @@ public interface MemberService extends IService<Member> {
      * @return 散客会员编号
      */
     Member getNonMember();
+
+    /**
+     * 根据会员编号查询会员
+     * @param memberId 会员编号
+     * @return 会员
+     */
+    Member getMemberIdWithCheckNull(Long memberId);
 }

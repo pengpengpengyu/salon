@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.web.service.DictService;
 import com.ruoyi.salon.domain.dto.*;
 import com.ruoyi.salon.domain.entity.*;
+import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberVo;
 import com.ruoyi.salon.service.MemberItemRelService;
@@ -109,7 +110,7 @@ public class MemberController extends BaseController {
     public String consume(@PathVariable("memberId") Long memberId, ModelMap modelMap) {
         Member member = memberService.getById(memberId);
         modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
-        modelMap.put("memberItemRels", memberItemRelService.queryRelForAllItemByMemberId(memberId));
+        modelMap.put("memberItemRels", memberItemRelService.queryVoListByMemberId(memberId));
         return prefix + "/consume";
     }
 
@@ -182,10 +183,9 @@ public class MemberController extends BaseController {
     @PostMapping("/balanceRecharge")
     @ResponseBody
     public AjaxResult balanceRechargeSave(@Validated BalanceRechargeRecordDto dto) {
-        BalanceRechargeRecord record = BeanUtils.convertEntity(dto, BalanceRechargeRecord.class);
-        record.setCreateBy(getLoginName());
-        record.setUpdateBy(getLoginName());
-        return toAjax(memberService.balanceRecharge(record));
+        dto.setCreateBy(getLoginName());
+        dto.setUpdateBy(getLoginName());
+        return toAjax(memberService.balanceRecharge(dto));
     }
 
     /**
@@ -197,10 +197,9 @@ public class MemberController extends BaseController {
     @PostMapping("/timesRecharge")
     @ResponseBody
     public AjaxResult timesRechargeSave(@Validated TimesRechargeRecordDto dto) {
-        TimesRechargeRecord record = BeanUtils.convertEntity(dto, TimesRechargeRecord.class);
-        record.setCreateBy(getLoginName());
-        record.setUpdateBy(getLoginName());
-        return toAjax(memberService.timesRecharge(record));
+        dto.setCreateBy(getLoginName());
+        dto.setUpdateBy(getLoginName());
+        return toAjax(memberService.timesRecharge(dto));
     }
 
     /**

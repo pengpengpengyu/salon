@@ -1,7 +1,9 @@
 package com.ruoyi.salon.service;
 
+import com.ruoyi.salon.domain.dto.RchgGiveItemRecordDto;
 import com.ruoyi.salon.domain.entity.MemberItemRel;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.salon.domain.entity.RchgGiveItemRecord;
 import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 
 import java.util.List;
@@ -36,11 +38,23 @@ public interface MemberItemRelService extends IService<MemberItemRel> {
 
 
     /**
-     * 新增会员项目关联或次数
+     * 新增会员项目关联或更新次数
      *
      * @param memberItemRel 会员-项目关联
      */
-    void addRelOrTimes(MemberItemRel memberItemRel);
+    void addRelOrUpdateTime(MemberItemRel memberItemRel);
+
+    /**
+     * 新增会员项目或更新赠送项目次数
+     * @param record 赠送次数记录
+     */
+    void addRelOrUpdateGiveTimes(RchgGiveItemRecord record);
+
+    /**
+     * 批量新增会员项目或更新赠送项目次数
+     * @param records 赠送项目记录列表
+     */
+    void batchAddRelOrUpdateGiveTimes(List<RchgGiveItemRecordDto> records);
 
     /**
      * 根据会员编号查询 会员-项目关联列表

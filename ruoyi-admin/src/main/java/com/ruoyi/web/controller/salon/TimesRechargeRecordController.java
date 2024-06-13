@@ -3,7 +3,6 @@ package com.ruoyi.web.controller.salon;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.salon.domain.dto.RecordSearchDto;
-import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.service.ItemService;
 import com.ruoyi.salon.service.TimesRechargeRecordService;
 import org.springframework.stereotype.Controller;

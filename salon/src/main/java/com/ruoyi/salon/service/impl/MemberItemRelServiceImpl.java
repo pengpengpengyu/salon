@@ -3,13 +3,17 @@ package com.ruoyi.salon.service.impl;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.salon.domain.dto.RchgGiveItemRecordDto;
 import com.ruoyi.salon.domain.entity.Item;
 import com.ruoyi.salon.domain.entity.MemberItemRel;
+import com.ruoyi.salon.domain.entity.RchgGiveItemRecord;
 import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.mapper.MemberItemRelMapper;
 import com.ruoyi.salon.service.ItemService;
 import com.ruoyi.salon.service.MemberItemRelService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +60,7 @@ public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, M
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addRelOrTimes(MemberItemRel rel) {
+    public void addRelOrUpdateTime(MemberItemRel rel) {
         if (rel.getMemberId() == null || rel.getItemId() == null || rel.getTimes() == null) {
             throw new ServiceException("会员编号,项目编号,充值次数不能为空");
         }
@@ -67,12 +71,50 @@ public class MemberItemRelServiceImpl extends ServiceImpl<MemberItemRelMapper, M
             updateRel.setMemberId(rel.getMemberId());
             updateRel.setItemId(rel.getItemId());
             updateRel.setTimes(rel.getTimes());
+            updateRel.setCreateBy(ShiroUtils.getLoginName());
+            updateRel.setUpdateBy(ShiroUtils.getLoginName());
             addRel(updateRel);
         } else {
             updateRel.setMemberItemRelId(memberItemRel.getMemberItemRelId());
             updateRel.setTimes(memberItemRel.getTimes() + rel.getTimes());
             updateRel.setUpdateBy(ShiroUtils.getLoginName());
             updateById(updateRel);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addRelOrUpdateGiveTimes(RchgGiveItemRecord record){
+        if (record.getMemberId() == null || record.getItemId() == null || record.getGiveTimes() == null) {
+            throw new ServiceException("会员编号,项目编号,充值次数不能为空");
+        }
+
+        MemberItemRel memberItemRel = queryByMemberAndItemId(record.getMemberId(), record.getItemId());
+        MemberItemRel updateRel = new MemberItemRel();
+        String loginName = ShiroUtils.getLoginName();
+        updateRel.setUpdateBy(loginName);
+        if (memberItemRel == null) {
+            updateRel = new MemberItemRel();
+            updateRel.setMemberId(record.getMemberId());
+            updateRel.setItemId(record.getItemId());
+            updateRel.setTimes(0);
+            updateRel.setGiveTimes(record.getGiveTimes());
+            updateRel.setCreateBy(loginName);
+            addRel(updateRel);
+        } else {
+            updateRel.setMemberItemRelId(memberItemRel.getMemberItemRelId());
+            updateRel.setGiveTimes(memberItemRel.getGiveTimes() + record.getGiveTimes());
+            updateById(updateRel);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchAddRelOrUpdateGiveTimes(List<RchgGiveItemRecordDto> records) {
+        if (CollectionUtils.isNotEmpty(records)) {
+            records.forEach(rchgGiveItemRecord -> {
+                this.addRelOrUpdateGiveTimes(BeanUtils.convertEntity(rchgGiveItemRecord, RchgGiveItemRecord.class));
+            });
         }
     }
 

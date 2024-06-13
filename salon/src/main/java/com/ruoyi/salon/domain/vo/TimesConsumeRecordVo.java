@@ -61,9 +61,19 @@ public class TimesConsumeRecordVo extends BaseVo {
     private Integer timesOriginal;
 
     /**
+     * 原始赠送次数
+     */
+    private Integer giveTimesOriginal;
+
+    /**
      * 剩余次数
      */
     private Integer timesAfter;
+
+    /**
+     * 剩余赠送次数
+     */
+    private Integer giveTimesAfter;
 
     /**
      * 消费日期

@@ -61,10 +61,22 @@ public class TimesConsumeRecord extends MbBaseEntity {
     private Integer timesOriginal;
 
     /**
+     * 原始赠送次数
+     */
+    @TableField("give_times_original")
+    private Integer giveTimesOriginal;
+
+    /**
      * 剩余次数
      */
     @TableField("times_after")
     private Integer timesAfter;
+
+    /**
+     * 剩余赠送次数
+     */
+    @TableField("give_times_after")
+    private Integer giveTimesAfter;
 
     /**
      * 消费日期

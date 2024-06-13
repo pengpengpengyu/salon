@@ -3,8 +3,10 @@ package com.ruoyi.salon.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ShiroUtils;
+import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
+import com.ruoyi.salon.domain.dto.TimesRechargeRecordDto;
 import com.ruoyi.salon.domain.entity.*;
-import com.ruoyi.salon.domain.enums.DelFlagEnum;
 import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.mapper.MemberMapper;
 import com.ruoyi.salon.service.*;
@@ -16,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -84,30 +84,24 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean balanceRecharge(BalanceRechargeRecord record) {
-        Member member = getById(record.getMemberId());
-        member.setRechargeBalance(member.getRechargeBalance().add(record.getRechargeAmount()));
-        member.setGiveBalance(member.getGiveBalance().add(record.getGiveAmount()));
-        member.setUpdateBy(ShiroUtils.getLoginName());
-        updateById(member);
-        return balanceRechargeRecordService.save(record);
+    public Boolean balanceRecharge(BalanceRechargeRecordDto record) {
+        updateBalanceForRecharge(record.getMemberId(), record.getRechargeAmount(), record.getGiveAmount());
+        memberItemRelService.batchAddRelOrUpdateGiveTimes(record.getGiveItemRecords());
+        BalanceRechargeRecord balanceRechargeRecord = BeanUtils.convertEntity(record, BalanceRechargeRecord.class);
+        return balanceRechargeRecordService.save(balanceRechargeRecord);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean timesRecharge(TimesRechargeRecord record) {
+    public Boolean timesRecharge(TimesRechargeRecordDto record) {
         MemberItemRel memberItemRel = new MemberItemRel();
         memberItemRel.setMemberId(record.getMemberId());
         memberItemRel.setItemId(record.getItemId());
         memberItemRel.setTimes(record.getRechargeTimes());
-        memberItemRelService.addRelOrTimes(memberItemRel);
-        timesRechargeRecordService.save(record);
-
-        BalanceRechargeRecord balanceRechargeRecord = new BalanceRechargeRecord();
-        balanceRechargeRecord.setMemberId(record.getMemberId());
-        balanceRechargeRecord.setRechargeAmount(BigDecimal.ZERO);
-        balanceRechargeRecord.setGiveAmount(record.getGiveAmount());
-        return balanceRecharge(balanceRechargeRecord);
+        memberItemRelService.addRelOrUpdateTime(memberItemRel);
+        memberItemRelService.batchAddRelOrUpdateGiveTimes(record.getGiveItemRecords());
+        updateBalanceForRecharge(record.getMemberId(), BigDecimal.ZERO, record.getGiveAmount());
+        return timesRechargeRecordService.save(BeanUtils.convertEntity(record, TimesRechargeRecord.class));
     }
 
     public Member queryByIdWithCheck(Long memberId) {
@@ -157,19 +151,28 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         Item item = itemService.queryByIdWithCheck(record.getItemId());
         MemberItemRel memberItemRel = memberItemRelService.queryByMemberAndItemIdWithCheck(record.getMemberId(), record.getItemId());
         record.setTimesOriginal(memberItemRel.getTimes());
+        record.setGiveTimesOriginal(memberItemRel.getGiveTimes());
 
         Integer timesAfConsume = memberItemRel.getTimes();
+        Integer givetimesAfConsume = memberItemRel.getGiveTimes();
+        // 先消费充值次数再消费赠送次数
         timesAfConsume = timesAfConsume - record.getConsumeTimes();
         if (timesAfConsume < 0) {
-            throw new ServiceException("剩余次数不足");
+            givetimesAfConsume = givetimesAfConsume - timesAfConsume;
+            if (givetimesAfConsume < 0) {
+                throw new ServiceException("剩余次数不足");
+            }
+            timesAfConsume = 0;
         }
         MemberItemRel updateRel = new MemberItemRel();
         updateRel.setMemberItemRelId(memberItemRel.getMemberItemRelId());
         updateRel.setTimes(timesAfConsume);
+        updateRel.setGiveTimes(givetimesAfConsume);
         memberItemRelService.updateByRelId(updateRel);
         // 2.记录次数消费记录
         record.setItemName(item.getItemName());
         record.setTimesAfter(timesAfConsume);
+        record.setGiveTimesAfter(givetimesAfConsume);
         timesConsumeRecordService.add(record);
         // 3.修改会员表最后消费日期
         LocalDate lastCustomDate = convertLastCustomDate(member.getLastCustomDate(), record.getConsumeDate());
@@ -267,6 +270,29 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         Member member = new Member();
         member.setMemberId(-1L);
         member.setMemberName("散客");
+        return member;
+    }
+
+    /**
+     * 修改会员余额
+     * @param memberId 会员编号
+     * @param balance 充值余额
+     * @param giveBalance 赠送余额
+     */
+    private void updateBalanceForRecharge(Long memberId, BigDecimal balance, BigDecimal giveBalance) {
+        Member member = getMemberIdWithCheckNull(memberId);
+        member.setRechargeBalance(member.getRechargeBalance().add(balance));
+        member.setGiveBalance(member.getGiveBalance().add(giveBalance));
+        member.setUpdateBy(ShiroUtils.getLoginName());
+        updateById(member);
+    }
+
+    @Override
+    public Member getMemberIdWithCheckNull(Long memberId) {
+        Member member = getById(memberId);
+        if (member == null) {
+            throw new ServiceException("会员不存在");
+        }
         return member;
     }
 }

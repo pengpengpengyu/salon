@@ -66,14 +66,22 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
+                        <label class="col-sm-4 control-label">消费日期：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{consumeDate}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <label class="col-sm-4 control-label">消费前次数：</label>
                         <div class="col-sm-8">
                             <p class="form-control-plaintext" th:text="*{timesOriginal}"></p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="col-sm-4 control-label">消费后次数：</label>
@@ -82,11 +90,21 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">消费日期：</label>
+                        <label class="col-sm-4 control-label">消费前赠送次数：</label>
                         <div class="col-sm-8">
-                            <p class="form-control-plaintext" th:text="*{consumeDate}"></p>
+                            <p class="form-control-plaintext" th:text="*{giveTimesOriginal}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">消费后赠送次数：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext" th:text="*{giveTimesAfter}"></p>
                         </div>
                     </div>
                 </div>
