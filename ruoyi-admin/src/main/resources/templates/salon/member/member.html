@@ -191,7 +191,7 @@
      */
     function consume(memberId) {
         var url = prefix + '/consume/' + memberId;
-        $.modal.openTab("会员消费", url);
+        $.modal.popupRight("会员消费", url);
     }
 
     /**
@@ -199,7 +199,7 @@
      */
     function nonMemberConsume() {
         var url = prefix + '/nonMemberConsume';
-        $.modal.openTab('散客消费', url);
+        $.modal.popupRight('散客消费', url);
     }
 </script>
 </body>

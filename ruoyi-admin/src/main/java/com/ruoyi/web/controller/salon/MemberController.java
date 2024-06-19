@@ -110,7 +110,7 @@ public class MemberController extends BaseController {
     public String consume(@PathVariable("memberId") Long memberId, ModelMap modelMap) {
         Member member = memberService.getById(memberId);
         modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
-        modelMap.put("memberItemRels", memberItemRelService.queryVoListByMemberId(memberId));
+        modelMap.put("memberItemRels", memberItemRelService.queryRelForAllItemByMemberId(memberId));
         return prefix + "/consume";
     }
 

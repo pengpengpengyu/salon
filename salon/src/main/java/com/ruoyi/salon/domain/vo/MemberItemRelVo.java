@@ -37,12 +37,12 @@ public class MemberItemRelVo extends BaseVo {
     /**
      * 充值次数
      */
-    private Integer times;
+    private Integer times = 0;
 
     /**
      * 赠送次数
      */
-    private Integer giveTimes;
+    private Integer giveTimes = 0;
 
     /**
      * 会员名称
