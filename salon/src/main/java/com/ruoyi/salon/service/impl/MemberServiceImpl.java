@@ -1,12 +1,15 @@
 package com.ruoyi.salon.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.salon.domain.dto.BalanceRechargeRecordDto;
+import com.ruoyi.salon.domain.dto.RchgGiveItemRecordDto;
 import com.ruoyi.salon.domain.dto.TimesRechargeRecordDto;
 import com.ruoyi.salon.domain.entity.*;
+import com.ruoyi.salon.domain.enums.RechargeTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.mapper.MemberMapper;
 import com.ruoyi.salon.service.*;
@@ -86,9 +89,10 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Transactional(rollbackFor = Exception.class)
     public Boolean balanceRecharge(BalanceRechargeRecordDto record) {
         updateBalanceForRecharge(record.getMemberId(), record.getRechargeAmount(), record.getGiveAmount());
-        memberItemRelService.batchAddRelOrUpdateGiveTimes(record.getGiveItemRecords());
         BalanceRechargeRecord balanceRechargeRecord = BeanUtils.convertEntity(record, BalanceRechargeRecord.class);
-        return balanceRechargeRecordService.save(balanceRechargeRecord);
+        balanceRechargeRecordService.save(balanceRechargeRecord);
+        addRelOrUpdateGiveTimes(record.getGiveItemRecords(), RechargeTypeEnum.BALANCE, balanceRechargeRecord.getBalanceRechargeRecordId());
+        return true;
     }
 
     @Override
@@ -99,9 +103,11 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         memberItemRel.setItemId(record.getItemId());
         memberItemRel.setTimes(record.getRechargeTimes());
         memberItemRelService.addRelOrUpdateTime(memberItemRel);
-        memberItemRelService.batchAddRelOrUpdateGiveTimes(record.getGiveItemRecords());
         updateBalanceForRecharge(record.getMemberId(), BigDecimal.ZERO, record.getGiveAmount());
-        return timesRechargeRecordService.save(BeanUtils.convertEntity(record, TimesRechargeRecord.class));
+        TimesRechargeRecord timesRechargeRecord = BeanUtils.convertEntity(record, TimesRechargeRecord.class);
+        timesRechargeRecordService.save(timesRechargeRecord);
+        addRelOrUpdateGiveTimes(record.getGiveItemRecords(), RechargeTypeEnum.ITEM_TIMES, timesRechargeRecord.getTimesRechargeRecordId());
+        return true;
     }
 
     public Member queryByIdWithCheck(Long memberId) {
@@ -275,8 +281,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     /**
      * 修改会员余额
-     * @param memberId 会员编号
-     * @param balance 充值余额
+     *
+     * @param memberId    会员编号
+     * @param balance     充值余额
      * @param giveBalance 赠送余额
      */
     private void updateBalanceForRecharge(Long memberId, BigDecimal balance, BigDecimal giveBalance) {
@@ -294,5 +301,15 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
             throw new ServiceException("会员不存在");
         }
         return member;
+    }
+
+    private void addRelOrUpdateGiveTimes(List<RchgGiveItemRecordDto> recordDtos, RechargeTypeEnum rechargeTypeEnum, Long rechargeRecordId) {
+        if (CollectionUtils.isNotEmpty(recordDtos)) {
+            recordDtos.forEach(item -> {
+                item.setRechargeType(rechargeTypeEnum.getCode());
+                item.setRechargeRecordId(rechargeRecordId);
+                memberItemRelService.batchAddRelOrUpdateGiveTimes(item);
+            });
+        }
     }
 }

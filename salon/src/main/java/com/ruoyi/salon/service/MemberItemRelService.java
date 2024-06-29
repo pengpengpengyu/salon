@@ -4,6 +4,7 @@ import com.ruoyi.salon.domain.dto.RchgGiveItemRecordDto;
 import com.ruoyi.salon.domain.entity.MemberItemRel;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.salon.domain.entity.RchgGiveItemRecord;
+import com.ruoyi.salon.domain.enums.RechargeTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 
 import java.util.List;
@@ -52,9 +53,10 @@ public interface MemberItemRelService extends IService<MemberItemRel> {
 
     /**
      * 批量新增会员项目或更新赠送项目次数
+     *
      * @param records 赠送项目记录列表
      */
-    void batchAddRelOrUpdateGiveTimes(List<RchgGiveItemRecordDto> records);
+    void batchAddRelOrUpdateGiveTimes(RchgGiveItemRecordDto record);
 
     /**
      * 根据会员编号查询 会员-项目关联列表

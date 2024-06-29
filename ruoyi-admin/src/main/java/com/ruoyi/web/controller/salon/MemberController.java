@@ -82,6 +82,7 @@ public class MemberController extends BaseController {
     public String balanceRecharge(@PathVariable("memberId") Long memberId, ModelMap modelMap) {
         Member member = memberService.getById(memberId);
         modelMap.put("member", BeanUtils.convertEntity(member, MemberVo.class));
+        modelMap.put("memberItemRels", memberItemRelService.queryRelForAllItemByMemberId(memberId));
         return prefix + "/balance_recharge";
     }
 
@@ -182,7 +183,7 @@ public class MemberController extends BaseController {
      */
     @PostMapping("/balanceRecharge")
     @ResponseBody
-    public AjaxResult balanceRechargeSave(@Validated BalanceRechargeRecordDto dto) {
+    public AjaxResult balanceRechargeSave(@Validated @RequestBody BalanceRechargeRecordDto dto) {
         dto.setCreateBy(getLoginName());
         dto.setUpdateBy(getLoginName());
         return toAjax(memberService.balanceRecharge(dto));
@@ -196,7 +197,7 @@ public class MemberController extends BaseController {
      */
     @PostMapping("/timesRecharge")
     @ResponseBody
-    public AjaxResult timesRechargeSave(@Validated TimesRechargeRecordDto dto) {
+    public AjaxResult timesRechargeSave(@Validated @RequestBody TimesRechargeRecordDto dto) {
         dto.setCreateBy(getLoginName());
         dto.setUpdateBy(getLoginName());
         return toAjax(memberService.timesRecharge(dto));

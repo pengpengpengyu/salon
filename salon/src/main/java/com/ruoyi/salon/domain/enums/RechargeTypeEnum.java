@@ -12,9 +12,9 @@ public enum RechargeTypeEnum {
     BALANCE("0", "余额充值"),
     ITEM_TIMES("1", "项目次数充值");
 
-    public final String code;
+    private final String code;
 
-    public final String desc;
+    private final String desc;
 
     RechargeTypeEnum(String coce, String desc) {
         this.code = coce;

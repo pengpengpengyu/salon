@@ -2,7 +2,7 @@ package com.ruoyi.salon.service.impl;
 
 import com.ruoyi.salon.domain.entity.RchgGiveItemRecord;
 import com.ruoyi.salon.mapper.RchgGiveItemRecordMapper;
-import com.ruoyi.salon.service.IRchgGiveItemRecordService;
+import com.ruoyi.salon.service.RchgGiveItemRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-06-12
  */
 @Service
-public class RchgGiveItemRecordServiceImpl extends ServiceImpl<RchgGiveItemRecordMapper, RchgGiveItemRecord> implements IRchgGiveItemRecordService {
+public class RchgGiveItemRecordServiceImpl extends ServiceImpl<RchgGiveItemRecordMapper, RchgGiveItemRecord> implements RchgGiveItemRecordService {
 
 }

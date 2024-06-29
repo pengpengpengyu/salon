@@ -589,3 +589,13 @@ $.ajaxSetup({
 function itemClose() {
     $.modal.close();
 }
+
+/*form表单数据转json*/
+function serializeFormToJson(form) {
+    var array = $("#" + form).serializeArray();
+    var json = {};
+    $.map(array, function(n, i){
+        json[n["name"]] = n["value"];
+    });
+    return json;
+}
