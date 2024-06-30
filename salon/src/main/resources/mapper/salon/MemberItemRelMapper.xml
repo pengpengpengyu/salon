@@ -29,6 +29,7 @@
         left join t_item i on t.item_id  = i.item_id and i.del_flag = '0'
         where
             t.member_id = #{memberId}
+          and (t.times > 0 or t.give_times > 0)
           and t.del_flag = '0'
     </select>
 </mapper>

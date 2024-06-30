@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('会员信息')" />
+</head>
+<body>
+<div class="main-content">
+    <form class="form-horizontal" th:object="${member}">
+        <h4 class="form-header h4">基本信息</h4>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">会员编号：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{memberId}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">姓名：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{memberName}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">手机号码：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{mobileNo}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">邮箱：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{email}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">性别：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{@dict.getLabel('sys_user_sex', gender)}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">会员等级：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{@dict.getLabel('salon_member_level', level)}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">会员标签：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{label}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">介绍人：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{introducer}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">积分：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{integral}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">最近消费日期：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{#temporals.format(lastCustomDate, 'yyyy-MM-dd')}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                        <label class="col-sm-4 control-label">备注：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{remark}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">创建人：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{createBy}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">修改人：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{updateBy}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">创建时间：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{#temporals.format(createTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">修改时间：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{#temporals.format(updateTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="form-header h4">余额信息</h4>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">充值余额：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{rechargeBalance}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">赠送余额：</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext" th:text="*{giveBalance}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="form-header h4">项目信息</h4>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var itemTimesData = [[${member.items}]];
+    function itemTimesInit() {
+        var options = {
+            modalName: "项目",
+            pagination: false,
+            showSearch: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            data: itemTimesData,
+            columns: [
+                {
+                    field: 'itemName',
+                    title: '项目名称'
+                },
+                {
+                    field: 'times',
+                    title: '充值次数',
+                    sortable: true
+                },
+                {
+                    field: 'giveTimes',
+                    title: '赠送次数',
+                    sortable: true
+                },
+                {
+                    title: "总次数",
+                    formatter: function (value, row, index) {
+                        return row.times + row.giveTimes;
+                    }
+                }]
+        };
+        $.table.init(options);
+    }
+    itemTimesInit();
+</script>
+</body>
+</html>

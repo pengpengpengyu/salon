@@ -12,6 +12,7 @@ import com.ruoyi.salon.domain.dto.*;
 import com.ruoyi.salon.domain.entity.*;
 import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
+import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.domain.vo.MemberVo;
 import com.ruoyi.salon.service.MemberItemRelService;
 import com.ruoyi.salon.service.MemberService;
@@ -129,6 +130,22 @@ public class MemberController extends BaseController {
         Map<String, SysDictData> dictDataMap = dictService.getTypeMap(DictTypeEnum.SALON_MEMBER_LEVEL.getCode());
         list.forEach(t -> t.setLevel(dictDataMap.getOrDefault(t.getLevel(), new SysDictData()).getDictLabel()));
         return getDataTable(list);
+    }
+
+    /**
+     * 会员详情
+     * @param memberId 会员编号
+     * @param modelMap modelMap
+     * @return 会员详情
+     */
+    @GetMapping(value = "/view/{memberId}")
+    public String view(@PathVariable("memberId") Long memberId, ModelMap modelMap) {
+        Member member = memberService.getMemberIdWithCheckNull(memberId);
+        MemberVo memberVo = BeanUtils.convertEntity(member, MemberVo.class);
+        List<MemberItemRelVo> memberItemRels = memberItemRelService.queryVoListByMemberId(memberId);
+        memberVo.setItems(memberItemRels);
+        modelMap.put("member", memberVo);
+        return prefix + "/view";
     }
 
     /**

@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -87,4 +88,9 @@ public class MemberVo extends BaseVo {
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastCustomDate;
+
+    /**
+     * 项目列表
+     */
+    private List<MemberItemRelVo> items;
 }
