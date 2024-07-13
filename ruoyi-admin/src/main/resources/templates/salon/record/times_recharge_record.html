@@ -6,22 +6,23 @@
     <th:block th:include="include :: layout-latest-css"/>
 </head>
 
-<body>
+<body th:fragment="timeRechargeRecord">
 <div class="ui-layout-center">
     <div class="container-div">
         <div class="row">
             <!--检索栏-->
             <div class="col-sm-12 search-collapse">
-                <form id="record_search_form">
+                <form id="times_recharge_record_form">
                     <div class="select-list">
                         <ul>
                             <li>
-                                会员编号：<input type="text" name="memberId"/>
+                                会员编号：<input type="text" name="memberId" th:value="${memberId}" readonly th:if="${memberId != null}"/>
+                                <input type="text" name="memberId"  th:if="${memberId == null}"/>
                             </li>
-                            <li>
+                            <li th:if="${memberId == null}">
                                 会员名称：<input type="text" name="memberName"/>
                             </li>
-                            <li>
+                            <li th:if="${memberId == null}">
                                 手机号码：<input type="text" name="mobileNo"/>
                             </li>
                             <li>
@@ -32,15 +33,15 @@
                             </li>
                             <li>
                                 <label>充值日期： </label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始日期"/>
+                                <input type="text" class="time-input" id="startTime4" placeholder="开始日期"/>
                                 <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束日期"/>
+                                <input type="text" class="time-input" id="endTime4" placeholder="结束日期"/>
                             </li>
                             <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick=timesRechargeRecordSearch();><i
                                         class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm"
-                                   onclick="$.form.reset(null, record_search_form)"><i
+                                   onclick="$.form.reset('times_recharge_record_form')"><i
                                         class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
                         </ul>
@@ -50,7 +51,7 @@
 
             <!--表格-->
             <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table"></table>
+                <table id="times_recharge_record-table"></table>
             </div>
         </div>
     </div>
@@ -59,7 +60,6 @@
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: layout-latest-js"/>
 <script th:inline="javascript">
-    var prefix = ctx + "salon/timesRechargeRecord";
     /*var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
     var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
     var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];*/
@@ -70,11 +70,14 @@
     var payModes = [[${@dict.getType('salon_pay_mode')}]];
 
     $(function () {
-        queryRecordList();
+        queryTimesRechageRecordList();
     });
 
-    function queryRecordList() {
+    function queryTimesRechageRecordList() {
+        var prefix = ctx + "salon/timesRechargeRecord";
         var options = {
+            id: 'times_recharge_record-table',
+            formId: 'times_recharge_record_form',
             url: prefix + "/list",
             viewUrl: prefix + "/view/{id}",
             removeUrl: prefix + "/remove",
@@ -83,10 +86,8 @@
             // sortName: "createTime",
             // sortOrder: "desc",
             modalName: "充次记录",
-            queryParams: queryParams,
-            columns: [{
-                checkbox: false
-            }, {
+            queryParams: timesRechargeRecordQueryParams,
+            columns: [ {
                 field: 'timesRechargeRecordId',
                 title: '记录编号'
             },
@@ -151,11 +152,16 @@
 
     }
 
-    function queryParams(params) {
+    function timesRechargeRecordQueryParams(params) {
         var search = $.table.queryParams(params);
-        search.beginTime=beginOfTime($("#startTime").val());
-        search.endTime=endOfTime($("#endTime").val());
+        search.beginTime=beginOfTime($("#startTime4").val());
+        search.endTime=endOfTime($("#endTime4").val());
         return search;
+    }
+
+   function timesRechargeRecordSearch() {
+        table.set('times_recharge_record-table');
+        $.table.search('times_recharge_record_form');
     }
 </script>
 </body>

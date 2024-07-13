@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('会员信息')" />
+    <th:block th:include="include :: header('会员信息')"/>
 </head>
 <body>
 <div class="main-content">
@@ -92,7 +92,8 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">最近消费日期：</label>
                     <div class="col-sm-8">
-                        <p class="form-control-plaintext" th:text="*{#temporals.format(lastCustomDate, 'yyyy-MM-dd')}"></p>
+                        <p class="form-control-plaintext"
+                           th:text="*{#temporals.format(lastCustomDate, 'yyyy-MM-dd')}"></p>
                     </div>
                 </div>
             </div>
@@ -100,7 +101,7 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                        <label class="col-sm-4 control-label">备注：</label>
+                    <label class="col-sm-4 control-label">备注：</label>
                     <div class="col-sm-8">
                         <p class="form-control-plaintext" th:text="*{remark}"></p>
                     </div>
@@ -130,7 +131,8 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">创建时间：</label>
                     <div class="col-sm-8">
-                        <p class="form-control-plaintext" th:text="*{#temporals.format(createTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                        <p class="form-control-plaintext"
+                           th:text="*{#temporals.format(createTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                     </div>
                 </div>
             </div>
@@ -138,7 +140,8 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">修改时间：</label>
                     <div class="col-sm-8">
-                        <p class="form-control-plaintext" th:text="*{#temporals.format(updateTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                        <p class="form-control-plaintext"
+                           th:text="*{#temporals.format(updateTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                     </div>
                 </div>
             </div>
@@ -163,16 +166,61 @@
             </div>
         </div>
         <h4 class="form-header h4">项目信息</h4>
-        <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table"></table>
+        <div class="row">
+            <div class="col-sm-12 select-table table-striped">
+                <table id="item-table"></table>
+            </div>
+        </div>
+        <h4 class="form-header h4">记录信息</h4>
+        <form style="display: none"></form>
+        <div class="row">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">余额充值记录</a>
+                            </li>
+                            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">项目充值记录</a>
+                            </li>
+                            <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">余额消费记录</a>
+                            </li>
+                            <li class=""><a data-toggle="tab" href="#tab-4" aria-expanded="false">项目消费记录</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div th:replace="salon/record/balance_recharge_record :: balanceRechargeRecord"></div>
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    <div th:replace="salon/record/times_recharge_record :: timeRechargeRecord"></div>
+                                </div>
+                            </div>
+                            <div id="tab-3" class="tab-pane">
+                                <div class="panel-body">
+                                    <div th:replace="salon/record/balance_consume_record :: balanceConsumeRecord"></div>
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="panel-body">
+                                    <div th:replace="salon/record/times_consume_record :: timesConsumeRecord"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>
-<th:block th:include="include :: footer" />
+<th:block th:include="include :: footer"/>
 <script th:inline="javascript">
-    var itemTimesData = [[${member.items}]];
+    let itemTimesData = [[${member.items}]];
     function itemTimesInit() {
-        var options = {
+        let options = {
+            id: 'item-table',
             modalName: "项目",
             pagination: false,
             showSearch: false,
@@ -202,9 +250,11 @@
                     }
                 }]
         };
+        table.set('');
         $.table.init(options);
     }
     itemTimesInit();
 </script>
+
 </body>
 </html>

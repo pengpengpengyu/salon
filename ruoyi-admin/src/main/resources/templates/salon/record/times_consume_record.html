@@ -6,22 +6,23 @@
     <th:block th:include="include :: layout-latest-css"/>
 </head>
 
-<body>
+<body th:fragment="timesConsumeRecord">
 <div class="ui-layout-center">
     <div class="container-div">
         <div class="row">
             <!--检索栏-->
             <div class="col-sm-12 search-collapse">
-                <form id="record_search_form">
+                <form id="times_consume_record_form">
                     <div class="select-list">
                         <ul>
                             <li>
-                                会员编号：<input type="text" name="memberId"/>
+                                会员编号：<input type="text" name="memberId" th:value="${memberId}" readonly th:if="${memberId != null}"/>
+                                <input type="text" name="memberId"  th:if="${memberId == null}"/>
                             </li>
-                            <li>
+                            <li th:if="${memberId == null}">
                                 会员名称：<input type="text" name="memberName"/>
                             </li>
-                            <li>
+                            <li th:if="${memberId == null}">
                                 手机号码：<input type="text" name="mobileNo"/>
                             </li>
                             <li>
@@ -32,15 +33,15 @@
                             </li>
                             <li>
                                 <label>消费日期： </label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始日期"/>
+                                <input type="text" class="time-input" id="startTime3" placeholder="开始日期"/>
                                 <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束日期"/>
+                                <input type="text" class="time-input" id="endTime3" placeholder="结束日期"/>
                             </li>
                             <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick=timesConsumeRecordSearch();><i
                                         class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm"
-                                   onclick="$.form.reset(null, record_search_form)"><i
+                                   onclick="$.form.reset('times_consume_record_form')"><i
                                         class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
                         </ul>
@@ -50,7 +51,7 @@
 
             <!--表格-->
             <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table"></table>
+                <table id="times_consume_record-table"></table>
             </div>
         </div>
     </div>
@@ -59,7 +60,6 @@
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: layout-latest-js"/>
 <script th:inline="javascript">
-    var prefix = ctx + "salon/timesConsumeRecord";
     /*var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
     var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
     var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];*/
@@ -70,11 +70,14 @@
     var enterStoreChannels = [[${@dict.getType('salon_enter_store_channel')}]];
 
     $(function () {
-        queryRecordList();
+        queryConsumeRecordList();
     });
 
-    function queryRecordList() {
+    function queryConsumeRecordList() {
+        var prefix = ctx + "salon/timesConsumeRecord";
         var options = {
+            id: 'times_consume_record-table',
+            formId: 'times_consume_record_form',
             url: prefix + "/list",
             viewUrl: prefix + "/view/{id}",
             removeUrl: prefix + "/remove",
@@ -83,10 +86,8 @@
             // sortName: "createTime",
             // sortOrder: "desc",
             modalName: "充次消费记录",
-            queryParams: queryParams,
+            queryParams: timesConsumeRecordQueryParams,
             columns: [{
-                checkbox: false
-            }, {
                 field: 'timesConsumeRecordId',
                 title: '记录编号'
             },
@@ -107,12 +108,8 @@
                     title: '项目名称'
                 },
                 {
-                    field: 'timesOriginal',
-                    title: '消费前次数'
-                },
-                {
-                    field: 'timesAfter',
-                    title: '消费后次数'
+                    field: 'consumeTimes',
+                    title: '消费次数'
                 },
                 {
                     field: 'consumeDate',
@@ -137,14 +134,18 @@
                 }]
         };
         $.table.init(options);
-
     }
 
-    function queryParams(params) {
+    function timesConsumeRecordQueryParams(params) {
         var search = $.table.queryParams(params);
-        search.beginTime=beginOfTime($("#startTime").val());
-        search.endTime=endOfTime($("#endTime").val());
+        search.beginTime=beginOfTime($("#startTime3").val());
+        search.endTime=endOfTime($("#endTime3").val());
         return search;
+    }
+
+    function timesConsumeRecordSearch() {
+        table.set('times_consume_record-table');
+        $.table.search('times_consume_record_form');
     }
 </script>
 </body>

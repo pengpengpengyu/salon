@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -47,6 +48,7 @@ public class TimesConsumeRecordDto extends BaseDto {
     /**
      * 消费次数
      */
+    @Min(value = 1, message = "消费次数不能小于1")
     @NotNull(message = "消费次数不能为空")
     private Integer consumeTimes;
 

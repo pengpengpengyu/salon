@@ -35,7 +35,7 @@
                                                 class="form-control m-b" required>
                                             <option text="请选择" value="">请选择</option>
                                             <option th:each="relVo : ${memberItemRels}" th:text="${relVo.itemName}"
-                                                    th:if="${relVo.times} > 0" th:value="${relVo.itemId}"></option>
+                                                    th:if="${relVo.times} > 0 or ${relVo.giveTimes} > 0" th:value="${relVo.itemId}"></option>
                                         </select>
                                     </div>
                                 </div>

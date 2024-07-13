@@ -164,7 +164,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         // 先消费充值次数再消费赠送次数
         timesAfConsume = timesAfConsume - record.getConsumeTimes();
         if (timesAfConsume < 0) {
-            givetimesAfConsume = givetimesAfConsume - timesAfConsume;
+            // 赠送次数 = 赠送次数 - abs(充值次数 - 消费次数)
+            givetimesAfConsume = givetimesAfConsume + timesAfConsume;
             if (givetimesAfConsume < 0) {
                 throw new ServiceException("剩余次数不足");
             }

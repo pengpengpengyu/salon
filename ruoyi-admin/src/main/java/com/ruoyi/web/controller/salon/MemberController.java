@@ -14,6 +14,7 @@ import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.domain.vo.MemberVo;
+import com.ruoyi.salon.service.ItemService;
 import com.ruoyi.salon.service.MemberItemRelService;
 import com.ruoyi.salon.service.MemberService;
 import org.springframework.stereotype.Controller;
@@ -46,6 +47,8 @@ public class MemberController extends BaseController {
     private DictService dictService;
     @Resource
     private MemberItemRelService memberItemRelService;
+    @Resource
+    private ItemService itemService;
     private final String prefix = "salon/member";
 
     @GetMapping()
@@ -145,6 +148,8 @@ public class MemberController extends BaseController {
         List<MemberItemRelVo> memberItemRels = memberItemRelService.queryVoListByMemberId(memberId);
         memberVo.setItems(memberItemRels);
         modelMap.put("member", memberVo);
+        modelMap.put("memberId", memberId);
+        modelMap.put("items", itemService.list());
         return prefix + "/view";
     }
 
