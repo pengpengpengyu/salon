@@ -98,4 +98,11 @@ public interface MemberService extends IService<Member> {
      * @return 会员
      */
     Member getMemberIdWithCheckNull(Long memberId);
+
+    /**
+     * 加锁查询
+     * @param memberId 会员编号
+     * @return 会员
+     */
+    Member queryByIdWithLock(Long memberId);
 }

@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MemberMapper extends BaseMapper<Member> {
 
+    /**
+     * 根据会员编号加锁查询
+     * @param memberId 会员编号
+     * @return 会员
+     */
+    Member selectByIdWithLock(Long memberId);
 }

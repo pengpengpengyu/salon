@@ -110,19 +110,11 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         return true;
     }
 
-    public Member queryByIdWithCheck(Long memberId) {
-        Member member = getById(memberId);
-        if (member == null) {
-            throw new ServiceException("会员不存在");
-        }
-        return member;
-    }
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean balanceConsume(BalanceConsumeRecord record) {
         // 1.会员表余额减扣并记录最后消费日期
-        Member member = queryByIdWithCheck(record.getMemberId());
+        Member member = queryByIdWithLock(record.getMemberId());
         Item item = itemService.queryByIdWithCheck(record.getItemId());
 
         record.setBalanceOriginal(member.getRechargeBalance());
@@ -153,7 +145,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Transactional(rollbackFor = Exception.class)
     public Boolean timesConsume(TimesConsumeRecord record) {
         // 1.修改会员项目关联表剩余次数
-        Member member = queryByIdWithCheck(record.getMemberId());
+        Member member = queryByIdWithLock(record.getMemberId());
         Item item = itemService.queryByIdWithCheck(record.getItemId());
         MemberItemRel memberItemRel = memberItemRelService.queryByMemberAndItemIdWithCheck(record.getMemberId(), record.getItemId());
         record.setTimesOriginal(memberItemRel.getTimes());
@@ -288,7 +280,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
      * @param giveBalance 赠送余额
      */
     private void updateBalanceForRecharge(Long memberId, BigDecimal balance, BigDecimal giveBalance) {
-        Member member = getMemberIdWithCheckNull(memberId);
+        Member member = queryByIdWithLock(memberId);
         member.setRechargeBalance(member.getRechargeBalance().add(balance));
         member.setGiveBalance(member.getGiveBalance().add(giveBalance));
         member.setUpdateBy(ShiroUtils.getLoginName());
@@ -298,6 +290,16 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Override
     public Member getMemberIdWithCheckNull(Long memberId) {
         Member member = getById(memberId);
+        if (member == null) {
+            throw new ServiceException("会员不存在");
+        }
+        return member;
+    }
+
+
+    @Override
+    public Member queryByIdWithLock(Long memberId) {
+        Member member = baseMapper.selectByIdWithLock(memberId);
         if (member == null) {
             throw new ServiceException("会员不存在");
         }

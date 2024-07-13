@@ -29,4 +29,9 @@
         member_id, member_name, email, mobile_no, gender, recharge_balance, give_balance, integral, level, label, introducer, remark, last_custom_date,del_flag, create_by, create_time, update_by, update_time
     </sql>
 
+    <select id="selectByIdWithLock" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+            from t_member
+        where member_id = #{memeberId}
+    </select>
 </mapper>
