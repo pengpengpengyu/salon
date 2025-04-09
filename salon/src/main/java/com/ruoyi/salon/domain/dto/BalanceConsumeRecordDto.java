@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -49,6 +50,7 @@ public class BalanceConsumeRecordDto extends BaseDto {
      * 消费金额
      */
     @NotNull(message = "消费金额不能为空")
+    @Min(value = 0, message = "消费金额不能小于0")
     private BigDecimal consumeAmount;
 
     /**

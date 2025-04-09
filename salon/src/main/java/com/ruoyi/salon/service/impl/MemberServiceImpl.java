@@ -254,7 +254,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         if (member.getIntegral().compareTo(Integer.valueOf(0)) > 0) {
             throw new ServiceException("积分剩余 " + member.getIntegral() + errMsg);
         }
-        List<MemberItemRelVo> memberItemRelVos = memberItemRelService.queryRelForAllItemByMemberId(memberId);
+        List<MemberItemRelVo> memberItemRelVos = memberItemRelService.queryVoListByMemberId(memberId);
         if (CollectionUtils.isNotEmpty(memberItemRelVos)) {
             throw new ServiceException("该会员下仍有项目" + errMsg);
         }

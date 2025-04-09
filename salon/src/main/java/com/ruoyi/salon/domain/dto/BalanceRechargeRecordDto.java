@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -40,12 +42,14 @@ public class BalanceRechargeRecordDto extends BaseDto {
      * 充值金额
      */
     @NotNull(message = "充值金额不能为空")
+    @Min(value = 0, message = "充值金额不能小于0")
     private BigDecimal rechargeAmount;
 
     /**
      * 赠送金额
      */
     @NotNull(message = "赠送金额不能为空")
+    @Min(value = 0, message = "赠送金额不能小于0")
     private BigDecimal giveAmount;
 
     /**
@@ -74,6 +78,7 @@ public class BalanceRechargeRecordDto extends BaseDto {
     /**
      * 赠送项目
      */
+    @Valid
     private List<RchgGiveItemRecordDto> giveItemRecords;
 
 }

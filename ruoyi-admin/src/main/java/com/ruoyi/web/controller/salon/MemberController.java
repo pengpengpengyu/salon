@@ -7,10 +7,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.validation.UpdateGroup;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.framework.web.service.DictService;
 import com.ruoyi.salon.domain.dto.*;
 import com.ruoyi.salon.domain.entity.*;
-import com.ruoyi.salon.domain.entity.TimesRechargeRecord;
 import com.ruoyi.salon.domain.enums.DictTypeEnum;
 import com.ruoyi.salon.domain.vo.MemberItemRelVo;
 import com.ruoyi.salon.domain.vo.MemberVo;
@@ -23,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Validator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,8 @@ public class MemberController extends BaseController {
     private MemberItemRelService memberItemRelService;
     @Resource
     private ItemService itemService;
+    @Resource
+    private Validator validator;
     private final String prefix = "salon/member";
 
     @GetMapping()
@@ -107,6 +110,7 @@ public class MemberController extends BaseController {
 
     /**
      * 消费
+     *
      * @param memberId 会员编号
      * @param modelMap modelMap
      * @return 消费页面
@@ -137,6 +141,7 @@ public class MemberController extends BaseController {
 
     /**
      * 会员详情
+     *
      * @param memberId 会员编号
      * @param modelMap modelMap
      * @return 会员详情
@@ -206,6 +211,9 @@ public class MemberController extends BaseController {
     @PostMapping("/balanceRecharge")
     @ResponseBody
     public AjaxResult balanceRechargeSave(@Validated @RequestBody BalanceRechargeRecordDto dto) {
+        if (dto.getGiveItemRecords() != null) {
+            dto.getGiveItemRecords().forEach(t -> BeanValidators.validateWithException(validator, dto.getGiveItemRecords()));
+        }
         dto.setCreateBy(getLoginName());
         dto.setUpdateBy(getLoginName());
         return toAjax(memberService.balanceRecharge(dto));
@@ -240,6 +248,7 @@ public class MemberController extends BaseController {
 
     /**
      * 充次消费
+     *
      * @param dto 消费记录
      * @return true/false
      */
@@ -252,6 +261,7 @@ public class MemberController extends BaseController {
 
     /**
      * 散客消费
+     *
      * @param dto 消费记录
      * @return true/false
      */
