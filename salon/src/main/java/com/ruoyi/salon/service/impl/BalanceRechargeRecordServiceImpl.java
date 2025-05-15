@@ -13,10 +13,8 @@ import com.ruoyi.salon.service.BalanceRechargeRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.salon.service.MemberService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +36,7 @@ public class BalanceRechargeRecordServiceImpl extends ServiceImpl<BalanceRecharg
 
     @Override
     public List<BalanceRechargeRecordVo> selectList(RecordSearchDto searchDto) {
-        List<BalanceRechargeRecordVo> list = baseMapper.selectList(searchDto);
+        List<BalanceRechargeRecordVo> list = baseMapper.queryList(searchDto);
         if (!list.isEmpty()) {
             Map<String, SysDictData> typeMap = dictService.getTypeMap(DictTypeEnum.SALON_PAY_MODE.getCode());
             list.forEach(t -> t.setPayMode(typeMap.getOrDefault(t.getPayMode(), new SysDictData()).getDictLabel()));

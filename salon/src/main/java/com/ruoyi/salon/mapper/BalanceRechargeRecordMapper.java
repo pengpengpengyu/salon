@@ -23,5 +23,5 @@ public interface BalanceRechargeRecordMapper extends BaseMapper<BalanceRechargeR
      * @param searchDto 查询参数
      * @return 记录列表
      */
-    List<BalanceRechargeRecordVo> selectList(RecordSearchDto searchDto);
+    List<BalanceRechargeRecordVo> queryList(RecordSearchDto searchDto);
 }

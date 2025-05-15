@@ -22,5 +22,5 @@ public interface BalanceConsumeRecordMapper extends BaseMapper<BalanceConsumeRec
      * @param searchDto 查询参数
      * @return 余额消费记录列表
      */
-    List<BalanceConsumeRecordVo> selectList(RecordSearchDto searchDto);
+    List<BalanceConsumeRecordVo> queryList(RecordSearchDto searchDto);
 }

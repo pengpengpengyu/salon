@@ -24,7 +24,7 @@
         balance_recharge_record_id, member_id, recharge_amount, give_amount, activity_name, recharge_time, pay_mode, remark, del_flag, create_by, create_time, update_by, update_time
     </sql>
 
-    <select id="selectList" resultType="com.ruoyi.salon.domain.vo.BalanceRechargeRecordVo">
+    <select id="queryList" resultType="com.ruoyi.salon.domain.vo.BalanceRechargeRecordVo">
         select t.balance_recharge_record_id,
                t.member_id,
                t.recharge_amount,

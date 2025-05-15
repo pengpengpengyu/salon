@@ -6,7 +6,6 @@ import com.ruoyi.salon.domain.dto.RecordSearchDto;
 import com.ruoyi.salon.domain.entity.BalanceConsumeRecord;
 import com.ruoyi.salon.domain.entity.Item;
 import com.ruoyi.salon.domain.entity.Member;
-import com.ruoyi.salon.domain.entity.TimesConsumeRecord;
 import com.ruoyi.salon.domain.vo.BalanceConsumeRecordVo;
 import com.ruoyi.salon.mapper.BalanceConsumeRecordMapper;
 import com.ruoyi.salon.service.BalanceConsumeRecordService;
@@ -16,7 +15,6 @@ import com.ruoyi.salon.service.MemberService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,7 +42,7 @@ public class BalanceConsumeRecordServiceImpl extends ServiceImpl<BalanceConsumeR
 
     @Override
     public List<BalanceConsumeRecordVo> queryVoList(RecordSearchDto searchDto) {
-        return baseMapper.selectList(searchDto);
+        return baseMapper.queryList(searchDto);
     }
 
     @Override
