@@ -23,5 +23,5 @@ public interface TimesRechargeRecordMapper extends BaseMapper<TimesRechargeRecor
      * @param searchDto 查询参数
      * @return 记录列表
      */
-    List<TimesRechargeRecordVo> selectList(RecordSearchDto searchDto);
+    List<TimesRechargeRecordVo> queryList(RecordSearchDto searchDto);
 }

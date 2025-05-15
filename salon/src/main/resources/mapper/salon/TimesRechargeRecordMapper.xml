@@ -26,7 +26,7 @@
         times_recharge_record_id, member_id, item_id, recharge_times, recharge_amount, give_amount, activity_name, recharge_time, pay_mode, remark, del_flag, create_by, create_time, update_by, update_time
     </sql>
 
-    <select id="selectList" resultType="com.ruoyi.salon.domain.vo.TimesRechargeRecordVo">
+    <select id="queryList" resultType="com.ruoyi.salon.domain.vo.TimesRechargeRecordVo">
         select t.times_recharge_record_id, t.member_id, t.item_id,t.recharge_times,
         t.recharge_amount,t.give_amount,t.activity_name,t.recharge_time,
         t.pay_mode,t.remark,h.member_name, h.mobile_no,i.item_name

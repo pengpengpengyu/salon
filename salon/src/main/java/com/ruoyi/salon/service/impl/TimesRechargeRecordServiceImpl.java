@@ -40,7 +40,7 @@ public class TimesRechargeRecordServiceImpl extends ServiceImpl<TimesRechargeRec
 
     @Override
     public List<TimesRechargeRecordVo> queryList(RecordSearchDto searchDto) {
-        List<TimesRechargeRecordVo> list = baseMapper.selectList(searchDto);
+        List<TimesRechargeRecordVo> list = baseMapper.queryList(searchDto);
         if (!list.isEmpty()) {
             Map<String, SysDictData> typeMap = dictService.getTypeMap(DictTypeEnum.SALON_PAY_MODE.getCode());
             list.forEach(t -> t.setPayMode(typeMap.getOrDefault(t.getPayMode(), new SysDictData()).getDictLabel()));
